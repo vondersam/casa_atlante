@@ -1,11 +1,7 @@
-import styles from './page.module.css';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <h1>Casa Atlante</h1>
-      </div>
-    </main>
-  );
+  return <Container>Casa Atlante</Container>;
 }
