@@ -8,7 +8,7 @@ function Header() {
   return (
     <>
       <Navbar>
-        <Navbar.Brand href="#home">Casa Atlante</Navbar.Brand>
+        <Navbar.Brand href="/">Casa Atlante</Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link href="/stay/the_home">Your stay</Nav.Link>
           <Nav.Link href="/location">Location</Nav.Link>

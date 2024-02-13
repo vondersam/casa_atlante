@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import './global.css';
 import Container from 'react-bootstrap/Container';
 import Header from './header';
 
@@ -21,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <main>
-          <Container className="mt-4">
+          <Container className="mt-3">
             <Header />
             {children}
           </Container>
