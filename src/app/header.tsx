@@ -7,7 +7,7 @@ import Navbar from 'react-bootstrap/Navbar';
 function Header() {
   return (
     <>
-      <Navbar>
+      <Navbar className="mb-2">
         <Navbar.Brand href="/">Casa Atlante</Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link href="/house">The house</Nav.Link>
