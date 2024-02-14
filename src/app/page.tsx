@@ -7,7 +7,7 @@ function Arrow(props: any) {
   return (
     <div
       className={className}
-      style={{ ...style, display: 'block', color: 'black' }}
+      style={{ ...style, display: 'block' }}
       onClick={onClick}
     />
   );

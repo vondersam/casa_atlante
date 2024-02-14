@@ -10,8 +10,9 @@ function Header() {
       <Navbar>
         <Navbar.Brand href="/">Casa Atlante</Navbar.Brand>
         <Nav className="me-auto">
-          <Nav.Link href="/stay/the_home">Your stay</Nav.Link>
+          <Nav.Link href="/house">The house</Nav.Link>
           <Nav.Link href="/location">Location</Nav.Link>
+          <Nav.Link href="/booking">Booking</Nav.Link>
           <Nav.Link href="/about">About</Nav.Link>
         </Nav>
       </Navbar>
