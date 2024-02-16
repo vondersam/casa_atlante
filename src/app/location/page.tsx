@@ -12,7 +12,7 @@ const center = { lat: 28.576755825093613, lng: -17.877278973588894 };
 function Location() {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
   });
 
   const [map, setMap] = React.useState(null);
@@ -32,7 +32,7 @@ function Location() {
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={13}
+      zoom={10}
       onLoad={onLoad}
       onUnmount={onUnmount}
       defaultCenter={center}
