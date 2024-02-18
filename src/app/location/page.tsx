@@ -41,7 +41,7 @@ function Location() {
       <></>
     </GoogleMap>
   ) : (
-    <></>
+    <>Loading map...</>
   );
 }
 
