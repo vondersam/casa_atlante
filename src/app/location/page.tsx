@@ -1,11 +1,7 @@
 'use client';
 import React from 'react';
-import {
-  APIProvider,
-  Map,
-  Marker,
-  useApiIsLoaded
-} from '@vis.gl/react-google-maps';
+import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
+import { Link } from 'react-router-dom';
 
 function Location() {
   const position = { lat: 28.576755825093613, lng: -17.877278973588894 };
@@ -33,15 +29,19 @@ function Location() {
         volcano, located only 3 km from the house.
       </p>
 
+      <a href="https://maps.app.goo.gl/BiCx97GW2YJdooCM9" target="_blank">
+        Address
+      </a>
       <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
         <Map
           center={position}
           defaultZoom={12}
           gestureHandling={'greedy'}
-          disableDefaultUI={true}
+          // disableDefaultUI={true}
           style={{ width: '400px', height: '400px' }}
-        />
-        <Marker position={position} />
+        >
+          <Marker position={position} />
+        </Map>
       </APIProvider>
     </>
   );
