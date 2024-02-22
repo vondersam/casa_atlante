@@ -37,7 +37,6 @@ function Location() {
           center={position}
           defaultZoom={12}
           gestureHandling={'greedy'}
-          // disableDefaultUI={true}
           style={{ width: '400px', height: '400px' }}
         >
           <Marker position={position} />
