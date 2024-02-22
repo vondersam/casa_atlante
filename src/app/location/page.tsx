@@ -1,32 +1,14 @@
 'use client';
 import React from 'react';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-
-const containerStyle = {
-  width: '500px',
-  height: '500px'
-};
-
-const center = { lat: 28.576755825093613, lng: -17.877278973588894 };
+import {
+  APIProvider,
+  Map,
+  Marker,
+  useApiIsLoaded
+} from '@vis.gl/react-google-maps';
 
 function Location() {
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-  });
-
-  const [map, setMap] = React.useState(null);
-
-  const onLoad = React.useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
-
-    setMap(map);
-  }, []);
-
-  const onUnmount = React.useCallback(function callback(map) {
-    setMap(null);
-  }, []);
+  const position = { lat: 28.576755825093613, lng: -17.877278973588894 };
 
   return (
     <>
@@ -51,20 +33,16 @@ function Location() {
         volcano, located only 3 km from the house.
       </p>
 
-      {isLoaded ? (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={10}
-          onLoad={onLoad}
-          onUnmount={onUnmount}
-        >
-          <Marker position={center} />
-          <></>
-        </GoogleMap>
-      ) : (
-        <>Loading map...</>
-      )}
+      <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
+        <Map
+          center={position}
+          defaultZoom={12}
+          gestureHandling={'greedy'}
+          disableDefaultUI={true}
+          style={{ width: '400px', height: '400px' }}
+        />
+        <Marker position={position} />
+      </APIProvider>
     </>
   );
 }
