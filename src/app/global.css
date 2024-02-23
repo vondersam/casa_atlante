@@ -1,3 +1,15 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+.portfolio-item {
+  /*width:100%;*/
+}
+.portfolio-item .item {
+  /*width:303px;*/
+  float: left;
+  margin-bottom: 10px;
+}
 .slick-arrow {
   z-index: 1;
   width: 30px;
