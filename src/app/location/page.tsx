@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
-import { Link } from 'react-router-dom';
 
 function Location() {
   const position = { lat: 28.576755825093613, lng: -17.877278973588894 };
