@@ -7,15 +7,18 @@ import Navbar from 'react-bootstrap/Navbar';
 function Header() {
   return (
     <>
-      <Navbar className="mb-2">
+      <Navbar expand="lg" className="bg-body-tertiary">
         <Navbar.Brand href="/">Casa Atlante</Navbar.Brand>
-        <Nav className="me-auto">
-          <Nav.Link href="/house">The house</Nav.Link>
-          <Nav.Link href="/location">Location</Nav.Link>
-          <Nav.Link href="/gallery">Gallery</Nav.Link>
-          <Nav.Link href="/booking">Booking</Nav.Link>
-          <Nav.Link href="/about">About</Nav.Link>
-        </Nav>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="/house">The house</Nav.Link>
+            <Nav.Link href="/location">Location</Nav.Link>
+            <Nav.Link href="/gallery">Gallery</Nav.Link>
+            <Nav.Link href="/booking">Booking</Nav.Link>
+            <Nav.Link href="/about">About</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
       </Navbar>
     </>
   );
