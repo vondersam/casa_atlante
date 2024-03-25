@@ -5,7 +5,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './global.css';
 import Container from 'react-bootstrap/Container';
-import Header from './header';
+import Header from './components/header';
+import Footer from './components/footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,12 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main>
-          <Container className="mt-3">
+        <div className="d-flex flex-column h-100">
+          <Container>
             <Header />
-            {children}
+            <main>{children}</main>
           </Container>
-        </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );
