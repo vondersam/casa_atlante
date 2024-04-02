@@ -3,11 +3,32 @@ html {
   box-sizing: border-box;
 }
 
+h1 {
+  font-size: 1.6em;
+}
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.25em;
+}
+
+a {
+  color: rgba(0, 0, 0, 0.65);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 body {
   height: 100%;
   margin: 0;
   padding: 0;
 }
+
 .portfolio-item {
   /*width:100%;*/
 }
