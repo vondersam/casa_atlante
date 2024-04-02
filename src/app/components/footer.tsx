@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 function Footer() {
   return (
-    <footer className="footer mt-5 py-3">
-      <div className="row d-flex text-center">
+    <footer className="footer mt-auto py-3">
+      <div className="row d-flex text-center mt-5">
         <div>
           <Link className="m-2" href="/legal">
             Legal notice
