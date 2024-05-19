@@ -91,7 +91,7 @@ export default function TheHome() {
       </ul>
       <h2>Rates and check-in</h2>
       <ul>
-        <li>85 euros per night for two guests</li>
+        <li>75 euros per night for two guests</li>
         <li>20 euros per night for each additional guest (sleeps max. 4)</li>
         <li>Check-out time is 10:00 AM.</li>
         <li>Check-in time is 15:00 PM or later.</li>
