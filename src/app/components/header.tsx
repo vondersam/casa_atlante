@@ -1,34 +1,34 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import Link from "next/link";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
 
 function Header() {
   return (
     <>
       <Navbar expand="lg" className="bg-body mb-3">
-        <Link href="/" passHref legacyBehavior>
-          <Navbar.Brand>Casa Atlante</Navbar.Brand>
-        </Link>
+        <Navbar.Brand as={Link} href="/">
+          Casa Atlante
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Link href="/house" passHref legacyBehavior>
-              <Nav.Link>The house</Nav.Link>
-            </Link>
-            <Link href="/location" passHref legacyBehavior>
-              <Nav.Link>Location</Nav.Link>
-            </Link>
-            <Link href="/gallery" passHref legacyBehavior>
-              <Nav.Link>Gallery</Nav.Link>
-            </Link>
-            <Link href="/booking" passHref legacyBehavior>
-              <Nav.Link>Booking</Nav.Link>
-            </Link>
-            <Link href="/about" passHref legacyBehavior>
-              <Nav.Link>About</Nav.Link>
-            </Link>
+            <Nav.Link as={Link} href="/house">
+              The house
+            </Nav.Link>
+            <Nav.Link as={Link} href="/location">
+              Location
+            </Nav.Link>
+            <Nav.Link as={Link} href="/gallery">
+              Gallery
+            </Nav.Link>
+            <Nav.Link as={Link} href="/booking">
+              Booking
+            </Nav.Link>
+            <Nav.Link as={Link} href="/about">
+              About
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
