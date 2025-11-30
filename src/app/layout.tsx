@@ -1,14 +1,20 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { Playfair_Display, Source_Sans_3 } from 'next/font/google';
 import './global.css';
-import Container from 'react-bootstrap/Container';
 import Header from './components/header';
 import Footer from './components/footer';
 
-const inter = Inter({ subsets: ['latin'] });
+const headingFont = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-heading'
+});
+
+const bodyFont = Source_Sans_3({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  variable: '--font-body'
+});
 
 export const metadata: Metadata = {
   title: 'Casa Atlante',
@@ -23,12 +29,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div className="d-flex flex-column h-100">
-          <Container>
-            <Header />
-            <main>{children}</main>
-          </Container>
+      <body className={`${bodyFont.variable} ${headingFont.variable}`}>
+        <div className="page-shell">
+          <Header />
+          <main>{children}</main>
           <Footer />
         </div>
       </body>

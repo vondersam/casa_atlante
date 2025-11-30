@@ -1,48 +1,50 @@
-'use client';
-import React from 'react';
-import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
-
-function Location() {
-  const position = { lat: 28.576755825093613, lng: -17.877278973588894 };
-
+export default function Location() {
   return (
-    <>
-      <p>
-        Casa Atlante’s unique location in the Red Natura 2000 of Tamanca area on
-        the west side of La Palma makes it perfect for those who love the
-        mountain and the beach. The area is a sea of tranquility and many hiking
-        trails can be accessed easily by feet from the house.
-      </p>
+    <section className="section">
+      <div className="content-width split-grid">
+        <div>
+          <div className="section-header">
+            <p className="eyebrow">Location</p>
+            <h1>Jedey, La Palma</h1>
+            <p className="lead">
+              Casa Atlante sits in the Red Natura 2000 of Tamanca on La Palma’s
+              west side, a peaceful base for beach days and mountain walks. Many
+              hiking trails start right outside the door.
+            </p>
+          </div>
 
-      <p>
-        The house is also conveniently located close to everything you need
-        within a short trip by car. The towns of El Paso and Los LLanos de
-        Aridane are both around 30-45 minutes away by car. The closest
-        supermarket, in Fuencaliente, is a 15 minutes drive. There is also a
-        small shop 1 minute away that has all the essentials. The nearest beach
-        is el Charco Verde, which can be reached in around 17 minutes, while El
-        Puerto de Tazacorte’s beach is located 25 minutes away from the house.
-        And if you want some wilder beaches you can head south to Fuencaliente
-        and be there in 30 minutes. There are also multiple lava fields that can
-        be explored by a few minutes’ drive, like the recent 2021’s Tajogaite
-        volcano, located only 3 km from the house.
-      </p>
+          <p>
+            El Paso and Los Llanos de Aridane are 30 minutes away by car. The
+            closest supermarket, in Fuencaliente, is a 15-minute drive, and a
+            small local shop one minute away covers essentials. Puerto Naos and
+            Charco Verde beach are about 15 minutes away, Puerto de Tazacorte 25
+            minutes, and the wilder Fuencaliente beaches around 30 minutes. The
+            2021 Tajogaite volcano and nearby lava fields are roughly 3 km away.
+          </p>
 
-      <a href="https://maps.app.goo.gl/BiCx97GW2YJdooCM9" target="_blank">
-        Address
-      </a>
-      <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
-        <Map
-          center={position}
-          defaultZoom={12}
-          gestureHandling={'greedy'}
-          style={{ width: '400px', height: '400px' }}
-        >
-          <Marker position={position} />
-        </Map>
-      </APIProvider>
-    </>
+          <div className="hero-actions" style={{ marginTop: "18px" }}>
+            <a
+              className="btn secondary"
+              href="https://maps.app.goo.gl/BiCx97GW2YJdooCM9"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open in Google Maps
+            </a>
+          </div>
+        </div>
+
+        <div className="map-embed">
+          <iframe
+            title="Casa Atlante location"
+            src="https://www.google.com/maps?q=28.576755825093613,-17.877278973588894&z=12&output=embed"
+            width="100%"
+            height="100%"
+            allowFullScreen
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </section>
   );
 }
-
-export default React.memo(Location);
