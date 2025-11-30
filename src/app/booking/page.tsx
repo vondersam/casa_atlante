@@ -1,8 +1,30 @@
 export default function Booking() {
   return (
-    <p>
-      For booking enquiries please contact us at{' '}
-      <a href="mailto:booking@casa-atlante.com">booking@casa-atlante.com</a>
-    </p>
+    <section className="section">
+      <div className="content-width">
+        <div className="section-header">
+          <p className="eyebrow">Booking</p>
+          <h1>Plan your stay</h1>
+          <p className="lead">
+            Share your travel dates and number of guests. We&apos;ll confirm
+            availability, rates, and arrival details.
+          </p>
+        </div>
+
+        <div className="booking-card">
+          <p>
+            Rates: 90 € per night for two guests, plus 20 € per night for each
+            additional guest (up to 4). All taxes included.
+          </p>
+          <p>Check-in from 15:00; check-out by 10:00.</p>
+          <p>Tourist Licence number: VV-38-5-0001908.</p>
+          <div className="hero-actions">
+            <a className="btn" href="mailto:booking@casa-atlante.com">
+              Booking request
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }

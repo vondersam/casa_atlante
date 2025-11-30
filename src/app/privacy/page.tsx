@@ -1,11 +1,12 @@
 export default function Privacy() {
   return (
-    <>
-      <h1 className="text-center">PRIVACY POLICY</h1>
+    <section className="section">
+      <div className="content-width legal-text">
+      <h1>PRIVACY POLICY</h1>
       <h2>1. USER INFORMATION</h2>
       <h3>Who is the controller of your personal data?</h3>
       <p>
-        Samuel Rodríguez Medina is the CONTROLLER of the USER’s personal data
+        Samuel Rodríguez Medina is the CONTROLLER of the USER's personal data
         and informs him/her that these data shall be processed in accordance
         with the provisions of Regulation (EU) 2016/679 of 27 April (GDPR) and
         the Organic Law 3/2018 of 5 December (LOPDGDD).
@@ -30,7 +31,7 @@ export default function Privacy() {
         <li>
           Processing orders, requests, respond to queries or any type of request
           made by the USER through any of the contact methods available at the
-          CONTROLLER’s website.
+          CONTROLLER's website.
         </li>
         <li>
           Send the online newsletter on news, offers and promotions in our
@@ -44,7 +45,7 @@ export default function Privacy() {
       </p>
       <ul>
         <li>
-          With the USER’s consent: sending commercial communications and the
+          With the USER's consent: sending commercial communications and the
           newsletter.
         </li>
         <li>
@@ -107,7 +108,7 @@ export default function Privacy() {
         mandatory, as they are necessary for the provision of an optimal service
         to the USER. In the event that not all of the data is provided, there is
         no guarantee that the information and services provided will be
-        completely adapted to the User’s needs.
+        completely adapted to the User's needs.
       </p>
       <h2>3. SECURITY MEASURES</h2>
       <p>
@@ -134,6 +135,7 @@ export default function Privacy() {
         - 38759 El Paso - La Palma (Santa Cruz De Tenerife). E-mail:
         booking@casa-atlante.com
       </p>
-    </>
+      </div>
+    </section>
   );
 }

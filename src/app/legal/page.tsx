@@ -1,6 +1,7 @@
 export default function Legal() {
   return (
-    <>
+    <section className="section">
+      <div className="content-width legal-text">
       <h1>INFORMATION SOCIETY SERVICES ACT (LSSI)</h1>
       <p>
         Samuel Rodríguez Medina, the person responsible for the website,
@@ -45,7 +46,7 @@ export default function Legal() {
         Regardless of their intended purpose, the total or partial reproduction,
         use, exploitation, distribution and commercialisation, requires in any
         case the prior written authorisation from the CONTROLLER. Any
-        unauthorised use is considered a serious breach of the author’s
+        unauthorised use is considered a serious breach of the author's
         intellectual or industrial property rights.
       </p>
       <p>
@@ -83,7 +84,7 @@ export default function Legal() {
         out certain functions considered necessary for the correct functioning
         and preview of the website. In any case, the cookies used are temporary,
         with the sole purpose of making navigation of the site more efficient,
-        and disappear at the end of the user’s session. Under no circumstances
+        and disappear at the end of the user's session. Under no circumstances
         do these cookies themselves provide personal data and will not be used
         for the collection of such data.
       </p>
@@ -151,10 +152,11 @@ export default function Legal() {
         Spanish legislation shall apply to the resolution of all disputes or
         questions related to this website or the activities carried out therein,
         to which the parties expressly submit themselves, and the Courts and
-        Tribunals of the USER’s domicile or the place of fulfilment of the
+        Tribunals of the USER's domicile or the place of fulfilment of the
         obligation shall be competent for the resolution of all disputes arising
         from or related to its use.
       </p>
-    </>
+      </div>
+    </section>
   );
 }

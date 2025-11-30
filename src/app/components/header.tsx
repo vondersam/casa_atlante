@@ -1,38 +1,57 @@
-'use client';
+"use client";
 
 import Link from 'next/link';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+const navItems = [
+  { href: '/house', label: 'The house' },
+  { href: '/location', label: 'Location' },
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/booking', label: 'Booking' },
+  { href: '/about', label: 'About' }
+];
 
 function Header() {
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
   return (
-    <>
-      <Navbar expand="lg" className="bg-body mb-3">
-        <Link href="/" passHref legacyBehavior>
-          <Navbar.Brand>Casa Atlante</Navbar.Brand>
+    <header className="site-header">
+      <div className="content-width header-inner">
+        <Link className="brand" href="/">
+          Casa Atlante
         </Link>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Link href="/house" passHref legacyBehavior>
-              <Nav.Link>The house</Nav.Link>
+
+        <button
+          className={`nav-toggle ${isOpen ? 'open' : ''}`}
+          aria-expanded={isOpen}
+          aria-label="Toggle navigation"
+          onClick={() => setIsOpen((open) => !open)}
+        >
+          <span />
+          <span />
+        </button>
+
+        <nav className={`main-nav ${isOpen ? 'open' : ''}`}>
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`nav-link ${
+                pathname === item.href ? 'active' : ''
+              }`.trim()}
+            >
+              {item.label}
             </Link>
-            <Link href="/location" passHref legacyBehavior>
-              <Nav.Link>Location</Nav.Link>
-            </Link>
-            <Link href="/gallery" passHref legacyBehavior>
-              <Nav.Link>Gallery</Nav.Link>
-            </Link>
-            <Link href="/booking" passHref legacyBehavior>
-              <Nav.Link>Booking</Nav.Link>
-            </Link>
-            <Link href="/about" passHref legacyBehavior>
-              <Nav.Link>About</Nav.Link>
-            </Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-    </>
+          ))}
+        </nav>
+      </div>
+    </header>
   );
 }
 

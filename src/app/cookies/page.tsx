@@ -1,7 +1,8 @@
 export default function Cookies() {
   return (
-    <>
-      <h1 className="text-center">COOKIES POLICY</h1>
+    <section className="section">
+      <div className="content-width legal-text">
+      <h1>COOKIES POLICY</h1>
       <h2>INFORMATION ABOUT COOKIES</h2>
       <p>
         In accordance with Law 34/2002, of July 11, on services of the
@@ -23,12 +24,12 @@ export default function Cookies() {
       <p>
         Through using these devices, the Web server is able to remember some
         data concerning the user, such as their preferences for viewing the
-        server’s pages, their name and password, products that interest them
+        server's pages, their name and password, products that interest them
         most, etc.
       </p>
       <h2>COOKIES AFFECTED BY, AND COOKIES EXEMPT FROM REGULATIONS</h2>
       <p>
-        According to the EU directive, thecookies that require the user’s
+        According to the EU directive, thecookies that require the user's
         informed consent are analysis, advertising and affiliation cookies,
         while technical cookies and those that are necessary for the operation
         of the website or the provision of services expressly requested by the
@@ -60,7 +61,7 @@ export default function Cookies() {
         </li>
         <li>
           <strong>Behavioural advertising cookies:</strong> collect information
-          on the user’s personal preferences and choices (retargeting) in order
+          on the user's personal preferences and choices (retargeting) in order
           to allow management, in the most efficient way possible, of the
           advertising spaces which, if applicable, the editor has included in a
           website, application or platform from where the requested service is
@@ -87,12 +88,12 @@ export default function Cookies() {
       <h3>ACCORDING TO THE PROPERTY</h3>
       <ul>
         <li>
-          <strong>Own cookies:</strong> are sent to the user’s terminal team
+          <strong>Own cookies:</strong> are sent to the user's terminal team
           from a team or power managed by the own editor and from where the
           requested service is provided by the user.
         </li>
         <li>
-          <strong>Third party cookies:</strong> are sent to the user’s terminal
+          <strong>Third party cookies:</strong> are sent to the user's terminal
           team from a team or power which is not managed by the editor, but by
           another body which processes data obtained through the cookies.
         </li>
@@ -241,6 +242,7 @@ export default function Cookies() {
           </a>
         </li>
       </ul>
-    </>
+      </div>
+    </section>
   );
 }
