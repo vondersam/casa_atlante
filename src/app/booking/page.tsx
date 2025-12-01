@@ -14,7 +14,7 @@ export default function Booking() {
         <div className="booking-card">
           <p>
             Rates: 90 € per night for two guests, plus 20 € per night for each
-            additional guest (up to 4). All taxes included.
+            additional guest (up to 4). 7% IGIC (VAT) of total price.
           </p>
           <p>Check-in from 15:00; check-out by 10:00.</p>
           <p>Tourist Licence number: VV-38-5-0001908.</p>
