@@ -198,6 +198,7 @@ main {
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
+  padding: 0 var(--gutter);
 }
 
 .header-inner {
@@ -258,6 +259,7 @@ main {
 .nav-toggle span {
   display: block;
   height: 2px;
+  width: 100%;
   background: var(--text);
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
