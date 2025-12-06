@@ -47,13 +47,13 @@ export function sanitizeBooking(booking: Booking): Booking | null {
 export async function getAvailability() {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
-    .from<DBBookingRow>(BOOKINGS_TABLE)
+    .from(BOOKINGS_TABLE)
     .select('start,end,source,note,updated_at,created_at')
     .order('start', { ascending: true });
 
   if (error) throw new Error(`Failed to load availability: ${error.message}`);
 
-  const sanitized = (data ?? [])
+  const sanitized = ((data ?? []) as DBBookingRow[])
     .map((row) =>
       sanitizeBooking({
         start: row.start ?? '',
@@ -64,7 +64,7 @@ export async function getAvailability() {
     )
     .filter((booking): booking is Booking => Boolean(booking));
 
-  const timestamps = (data ?? [])
+  const timestamps = ((data ?? []) as DBBookingRow[])
     .map((row) => row.updated_at ?? row.created_at)
     .filter(Boolean)
     .map((value) => new Date(value as string).getTime())
