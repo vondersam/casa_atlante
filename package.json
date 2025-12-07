@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.86.2",
-    "@vercel/kv": "^3.0.0",
     "@vis.gl/react-google-maps": "^1.7.1",
     "bootstrap": "^5.3.8",
     "next": "^16.0.7",
