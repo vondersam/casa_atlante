@@ -105,8 +105,11 @@ export default function TheHome() {
             <li>
               20 euros per night for each additional guest (sleeps max. 4)
             </li>
+            <li>
+              Prices exclude IGIC (VAT), which is 7% and added to the final
+              price
+            </li>
             <li>Check-out time is 10:00 AM; check-in from 15:00 PM or later</li>
-            <li>All prices include tax</li>
             <li>Tourist Licence number: VV-38-5-0001908</li>
           </ul>
           <p>

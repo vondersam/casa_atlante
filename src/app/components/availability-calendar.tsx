@@ -19,6 +19,20 @@ type CalendarCell = {
   isoDate?: string;
   inCurrentMonth: boolean;
   isBooked: boolean;
+  isStart: boolean;
+  isEnd: boolean;
+  isBeforeMin: boolean;
+};
+
+type SelectedRange = {
+  start: string | null;
+  end: string | null;
+};
+
+type AvailabilityCalendarProps = {
+  selectable?: boolean;
+  selectedRange?: SelectedRange;
+  onSelectRange?: (range: SelectedRange) => void;
 };
 
 const weekdayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -35,7 +49,18 @@ function toISODate(date: Date) {
   return date.toISOString().slice(0, 10);
 }
 
-export default function AvailabilityCalendar() {
+export default function AvailabilityCalendar({
+  selectable = false,
+  selectedRange,
+  onSelectRange,
+}: AvailabilityCalendarProps) {
+  const today = new Date();
+  const minSelectable = useMemo(() => {
+    const min = new Date(
+      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + 2)
+    );
+    return toISODate(min);
+  }, [today]);
   const [month, setMonth] = useState(() => {
     const now = new Date();
     return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
@@ -44,6 +69,11 @@ export default function AvailabilityCalendar() {
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [internalSelection, setInternalSelection] = useState<SelectedRange>({
+    start: null,
+    end: null,
+  });
+  const selection = selectedRange ?? internalSelection;
 
   useEffect(() => {
     let cancelled = false;
@@ -89,9 +119,15 @@ export default function AvailabilityCalendar() {
 
     const cellList: CalendarCell[] = [];
 
-    const isBooked = (date: Date) => {
+    const bookingState = (date: Date) => {
       const iso = toISODate(date);
-      return bookings.some((booking) => iso >= booking.start && iso < booking.end);
+      // Treat the start day as available (checkout of prior guest); block nights between start and end.
+      const booked = bookings.some(
+        (booking) => iso > booking.start && iso < booking.end
+      );
+      const isStart = bookings.some((booking) => iso === booking.start);
+      const isEnd = bookings.some((booking) => iso === booking.end);
+      return { booked, isStart, isEnd };
     };
 
     for (let i = 0; i < totalCells; i++) {
@@ -103,21 +139,62 @@ export default function AvailabilityCalendar() {
           label: null,
           inCurrentMonth: false,
           isBooked: false,
+          isStart: false,
+          isEnd: false,
+          isBeforeMin: false,
         });
         continue;
       }
 
       const date = new Date(Date.UTC(year, monthIndex, dayNumber));
+      const { booked, isStart, isEnd } = bookingState(date);
+      const iso = toISODate(date);
       cellList.push({
         label: dayNumber,
-        isoDate: toISODate(date),
+        isoDate: iso,
         inCurrentMonth: true,
-        isBooked: isBooked(date)
+        isBooked: booked,
+        isStart,
+        isEnd,
+        isBeforeMin: iso < minSelectable,
       });
     }
 
     return cellList;
-  }, [bookings, month]);
+  }, [bookings, month, minSelectable]);
+
+  function updateSelection(isoDate: string) {
+    if (!selectable) return;
+    const current = selection;
+
+    // Start fresh if nothing selected or both set
+    if (!current.start || (current.start && current.end)) {
+      setInternalSelection({ start: isoDate, end: null });
+      onSelectRange?.({ start: isoDate, end: null });
+      return;
+    }
+
+    // If clicking before or same as start, reset start
+    if (isoDate <= current.start) {
+      setInternalSelection({ start: isoDate, end: null });
+      onSelectRange?.({ start: isoDate, end: null });
+      return;
+    }
+
+    // Otherwise set end (checkout date is exclusive)
+    const next = { start: current.start, end: isoDate };
+    setInternalSelection(next);
+    onSelectRange?.(next);
+  }
+
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
 
   return (
     <div className="availability-card">
@@ -136,7 +213,7 @@ export default function AvailabilityCalendar() {
           <div className="month-label">{formatMonth(month)}</div>
           {updatedAt ? (
             <p className="calendar-meta">
-              Synced {new Date(updatedAt).toLocaleString()}
+              Synced {new Date(updatedAt).toLocaleString("en-GB", options)}
             </p>
           ) : (
             <p className="calendar-meta">Syncing calendar…</p>
@@ -165,25 +242,76 @@ export default function AvailabilityCalendar() {
               </div>
             ))}
 
-            {cells.map((cell, index) => (
-              <div
-                key={cell.isoDate ?? `pad-${index}`}
-                className={`calendar-cell day ${
-                  cell.inCurrentMonth ? "" : "muted"
-                } ${cell.isBooked ? "booked" : "available"}`}
-                aria-label={
-                  cell.isoDate
-                    ? `${cell.isoDate} is ${
-                        cell.isBooked ? "booked" : "available"
-                      }`
-                    : undefined
-                }
-              >
-                <span className="day-number">
-                  {cell.label !== null ? cell.label : ""}
-                </span>
-              </div>
-            ))}
+            {cells.map((cell, index) => {
+              const isSelectionStart =
+                selection.start && cell.isoDate === selection.start;
+              const isSelectionEnd =
+                selection.end && cell.isoDate === selection.end;
+              const isSelected =
+                selection.start &&
+                cell.isoDate &&
+                ((selection.end &&
+                  cell.isoDate >= selection.start &&
+                  cell.isoDate <= selection.end) ||
+                  (!selection.end && cell.isoDate === selection.start));
+
+              const classes = [
+                "calendar-cell",
+                "day",
+                cell.inCurrentMonth ? "" : "muted",
+                cell.isBooked ? "booked" : "available",
+                cell.isStart ? "boundary-start" : "",
+                cell.isEnd ? "boundary-end" : "",
+                selectable ? "selectable" : "",
+                isSelected ? "selected" : "",
+                isSelectionStart ? "selected-start" : "",
+                isSelectionEnd ? "selected-end" : "",
+                cell.isBeforeMin ? "disabled" : "",
+              ]
+                .filter(Boolean)
+                .join(" ");
+
+              const label = cell.isoDate
+                ? `${cell.isoDate} is ${
+                    cell.isBooked ? "booked" : "available"
+                  }${
+                    cell.isStart
+                      ? " (checkout day for previous booking)"
+                      : ""
+                  }${cell.isEnd ? " (check-in day for next booking)" : ""}`
+                : undefined;
+
+              const handleClick = () => {
+                if (!selectable) return;
+                if (!cell.isoDate || cell.isBooked || !cell.inCurrentMonth || cell.isBeforeMin) return;
+                updateSelection(cell.isoDate);
+              };
+
+              return (
+                <div
+                  key={cell.isoDate ?? `pad-${index}`}
+                  className={classes}
+                  aria-label={label}
+                  role={selectable ? "button" : undefined}
+                  tabIndex={
+                    selectable && cell.inCurrentMonth && !cell.isBooked && !cell.isBeforeMin
+                      ? 0
+                      : undefined
+                  }
+                  onClick={handleClick}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleClick();
+                    }
+                  }}
+                >
+                  <span className="day-number">
+                    {cell.label !== null ? cell.label : ""}
+                  </span>
+                </div>
+              );
+            })}
           </div>
 
           <div className="calendar-legend">

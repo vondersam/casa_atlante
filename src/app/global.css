@@ -386,6 +386,20 @@ main {
   border-color: var(--accent);
 }
 
+.calendar-cell.day.selectable {
+  cursor: pointer;
+}
+
+.calendar-cell.day.disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.calendar-cell.day.selected {
+  background: #e7f1ff;
+  border-color: var(--accent);
+}
+
 .calendar-cell.day.muted {
   opacity: 0.4;
   background: #fff;
@@ -704,6 +718,85 @@ main {
   display: grid;
   gap: 14px;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.05);
+}
+
+.booking-form {
+  display: grid;
+  gap: 12px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.form-field {
+  display: grid;
+  gap: 6px;
+  font-size: 0.95rem;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 1rem;
+  background: #faf8f6;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: 2px solid var(--accent);
+  background: #fff;
+}
+
+.form-error {
+  color: #b00020;
+  margin: 0;
+}
+
+.form-success {
+  color: #0f7b3d;
+  margin: 0;
+}
+
+.form-field.checkbox {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.quote {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #faf8f6;
+  display: grid;
+  gap: 6px;
+}
+
+.quote-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.quote-line.total {
+  font-weight: 700;
+}
+
+.gdpr-link {
+  text-decoration: underline;
+}
+
+.muted.small {
+  font-size: 0.9rem;
+  color: var(--muted);
 }
 
 .map-embed {
