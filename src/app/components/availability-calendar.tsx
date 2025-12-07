@@ -91,7 +91,9 @@ export default function AvailabilityCalendar() {
 
     const isBooked = (date: Date) => {
       const iso = toISODate(date);
-      return bookings.some((booking) => iso >= booking.start && iso < booking.end);
+      return bookings.some(
+        (booking) => iso >= booking.start && iso < booking.end
+      );
     };
 
     for (let i = 0; i < totalCells; i++) {
@@ -112,12 +114,21 @@ export default function AvailabilityCalendar() {
         label: dayNumber,
         isoDate: toISODate(date),
         inCurrentMonth: true,
-        isBooked: isBooked(date)
+        isBooked: isBooked(date),
       });
     }
 
     return cellList;
   }, [bookings, month]);
+
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
 
   return (
     <div className="availability-card">
@@ -136,7 +147,7 @@ export default function AvailabilityCalendar() {
           <div className="month-label">{formatMonth(month)}</div>
           {updatedAt ? (
             <p className="calendar-meta">
-              Synced {new Date(updatedAt).toLocaleString()}
+              Synced {new Date(updatedAt).toLocaleString("en-GB", options)}
             </p>
           ) : (
             <p className="calendar-meta">Syncing calendar…</p>
