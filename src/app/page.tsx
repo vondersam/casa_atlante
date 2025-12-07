@@ -368,9 +368,6 @@ export default function Home() {
               <p>Check-in from 15:00; check-out by 10:00.</p>
               <p>Tourist Licence number: VV-38-5-0001908.</p>
               <div className="hero-actions">
-                <a className="btn" href="mailto:booking@casa-atlante.com">
-                  Booking request
-                </a>
                 <Link className="btn secondary" href="/booking">
                   Check availability
                 </Link>
