@@ -363,7 +363,7 @@ export default function Home() {
             <div className="booking-card">
               <p>
                 Rates: 90 € per night for two guests. 20 € per night for each
-                additional guest (up to 4). All prices include tax.
+                additional guest (up to 4).
               </p>
               <p>Check-in from 15:00; check-out by 10:00.</p>
               <p>Tourist Licence number: VV-38-5-0001908.</p>
@@ -372,7 +372,7 @@ export default function Home() {
                   Booking request
                 </a>
                 <Link className="btn secondary" href="/booking">
-                  Booking details
+                  Check availability
                 </Link>
               </div>
             </div>
