@@ -14,9 +14,7 @@ export default function Booking() {
         </div>
 
         <div className="split-grid">
-          <div className="booking-card webhook-card">
-            <AvailabilityCalendar />
-          </div>
+          <AvailabilityCalendar />
           <div className="booking-card">
             <p>
               Rates: 90 € per night for two guests, plus 20 € per night for each
