@@ -1,7 +1,8 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
-import AvailabilityCalendar from "../components/availability-calendar";
+import { FormEvent, Suspense, lazy, useMemo, useState } from "react";
+
+const AvailabilityCalendar = lazy(() => import("../components/availability-calendar"));
 
 type SelectedRange = {
   start: string | null;
@@ -176,16 +177,24 @@ export default function Booking() {
         </div>
 
         <div className="split-grid">
-          <AvailabilityCalendar
-            selectable
-            selectedRange={selection}
-            onSelectRange={(range) => {
-              setSelection(range);
-              setStatus("idle");
-              setError(null);
-              setAttempted(false);
-            }}
-          />
+          <Suspense
+            fallback={
+              <div className="availability-card">
+                <p className="calendar-status">Loading availability…</p>
+              </div>
+            }
+          >
+            <AvailabilityCalendar
+              selectable
+              selectedRange={selection}
+              onSelectRange={(range) => {
+                setSelection(range);
+                setStatus("idle");
+                setError(null);
+                setAttempted(false);
+              }}
+            />
+          </Suspense>
 
           <div className="booking-card">
             <div>
