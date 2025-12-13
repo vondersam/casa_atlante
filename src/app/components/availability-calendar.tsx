@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
-type Booking = {
+export type Booking = {
   start: string; // YYYY-MM-DD (inclusive)
   end: string; // YYYY-MM-DD (checkout date, exclusive)
   source?: string;
   note?: string;
-};
-
-type AvailabilityResponse = {
-  bookings: Booking[];
-  updatedAt?: string;
 };
 
 type CalendarCell = {
@@ -24,12 +19,15 @@ type CalendarCell = {
   isBeforeMin: boolean;
 };
 
-type SelectedRange = {
+export type SelectedRange = {
   start: string | null;
   end: string | null;
 };
 
-type AvailabilityCalendarProps = {
+export type AvailabilityCalendarProps = {
+  bookings: Booking[];
+  updatedAt: string | null;
+  error?: string | null;
   selectable?: boolean;
   selectedRange?: SelectedRange;
   onSelectRange?: (range: SelectedRange) => void;
@@ -50,6 +48,9 @@ function toISODate(date: Date) {
 }
 
 export default function AvailabilityCalendar({
+  bookings,
+  updatedAt,
+  error,
   selectable = false,
   selectedRange,
   onSelectRange,
@@ -57,7 +58,11 @@ export default function AvailabilityCalendar({
   const today = new Date();
   const minSelectable = useMemo(() => {
     const min = new Date(
-      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + 2)
+      Date.UTC(
+        today.getUTCFullYear(),
+        today.getUTCMonth(),
+        today.getUTCDate() + 2
+      )
     );
     return toISODate(min);
   }, [today]);
@@ -65,41 +70,11 @@ export default function AvailabilityCalendar({
     const now = new Date();
     return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
   });
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
   const [internalSelection, setInternalSelection] = useState<SelectedRange>({
     start: null,
     end: null,
   });
   const selection = selectedRange ?? internalSelection;
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadAvailability() {
-      try {
-        const res = await fetch("/api/availability", { cache: "no-store" });
-        if (!res.ok) throw new Error("Failed to load availability");
-        const data: AvailabilityResponse = await res.json();
-        if (!cancelled) {
-          setBookings(data.bookings || []);
-          setUpdatedAt(data.updatedAt ?? null);
-        }
-      } catch (err) {
-        if (!cancelled) setError((err as Error).message);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    loadAvailability();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   function shiftMonth(delta: number) {
     const next = new Date(month);
@@ -192,8 +167,6 @@ export default function AvailabilityCalendar({
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
   };
 
   return (
@@ -230,10 +203,11 @@ export default function AvailabilityCalendar({
         </button>
       </div>
 
-      {loading && <p className="calendar-status">Loading availability…</p>}
-      {error && <p className="calendar-status error">{error}</p>}
-
-      {!loading && !error && (
+      {error ? (
+        <p className="calendar-status error">
+          {error || "Failed to load availability"}
+        </p>
+      ) : (
         <>
           <div className="calendar-grid">
             {weekdayLabels.map((day) => (
@@ -275,15 +249,19 @@ export default function AvailabilityCalendar({
                 ? `${cell.isoDate} is ${
                     cell.isBooked ? "booked" : "available"
                   }${
-                    cell.isStart
-                      ? " (checkout day for previous booking)"
-                      : ""
+                    cell.isStart ? " (checkout day for previous booking)" : ""
                   }${cell.isEnd ? " (check-in day for next booking)" : ""}`
                 : undefined;
 
               const handleClick = () => {
                 if (!selectable) return;
-                if (!cell.isoDate || cell.isBooked || !cell.inCurrentMonth || cell.isBeforeMin) return;
+                if (
+                  !cell.isoDate ||
+                  cell.isBooked ||
+                  !cell.inCurrentMonth ||
+                  cell.isBeforeMin
+                )
+                  return;
                 updateSelection(cell.isoDate);
               };
 
@@ -294,7 +272,10 @@ export default function AvailabilityCalendar({
                   aria-label={label}
                   role={selectable ? "button" : undefined}
                   tabIndex={
-                    selectable && cell.inCurrentMonth && !cell.isBooked && !cell.isBeforeMin
+                    selectable &&
+                    cell.inCurrentMonth &&
+                    !cell.isBooked &&
+                    !cell.isBeforeMin
                       ? 0
                       : undefined
                   }
