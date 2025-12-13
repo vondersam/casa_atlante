@@ -7,7 +7,7 @@ export default function About() {
         <div>
           <div className="section-header">
             <p className="eyebrow">About</p>
-            <h1>A home built with family</h1>
+            <h1>My story</h1>
           </div>
           <p>
             My name is Samuel. I was born on La Palma and lived there until I
