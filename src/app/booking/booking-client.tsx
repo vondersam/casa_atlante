@@ -29,7 +29,7 @@ const EXTRA_GUEST_FEE = 20;
 const INCLUDED_GUESTS = 2;
 const MAX_GUESTS = 4;
 const IGIC_RATE = 0.07;
-const MIN_NIGHTS = 5;
+const MIN_NIGHTS = 4;
 
 function nightsBetween(start: string | null, end: string | null) {
   if (!start || !end) return 0;
@@ -204,7 +204,7 @@ export default function BookingClient({
     }
 
     if (selectedNights < MIN_NIGHTS) {
-      setError("Minimum stay is 5 nights. Please adjust your dates.");
+      setError("Minimum stay is 4 nights. Please adjust your dates.");
       return;
     }
 
@@ -390,8 +390,8 @@ export default function BookingClient({
               </label>
 
               <p className="muted small">{selectedSummary}</p>
-              {selectedNights > 0 && selectedNights < 5 && (
-                <p className="form-error">Minimum stay is 5 nights.</p>
+              {selectedNights > 0 && selectedNights < MIN_NIGHTS && (
+                <p className="form-error">Minimum stay is 4 nights.</p>
               )}
               {quote && selectedNights >= MIN_NIGHTS && (
                 <div className="quote">
@@ -441,7 +441,7 @@ export default function BookingClient({
 
               {!canSubmit && attempted && !error && (
                 <p className="form-error">
-                  Please complete all fields, pick check-in and check-out (min 5
+                  Please complete all fields, pick check-in and check-out (min 4
                   nights), add your message, and accept the GDPR notice.
                 </p>
               )}
