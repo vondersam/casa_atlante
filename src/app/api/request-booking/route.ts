@@ -21,6 +21,7 @@ type BookingRequestPayload = {
 };
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const MIN_NIGHTS = 4;
 
 function normalizeDate(value?: string | null) {
   if (!value || !ISO_DATE.test(value)) return null;
@@ -92,9 +93,9 @@ export async function POST(req: NextRequest) {
       (1000 * 60 * 60 * 24)
   );
 
-  if (stayNights < 5) {
+  if (stayNights < MIN_NIGHTS) {
     return NextResponse.json(
-      { error: "Minimum stay is 5 nights. Please adjust your dates." },
+      { error: "Minimum stay is 4 nights. Please adjust your dates." },
       { status: 400 }
     );
   }
