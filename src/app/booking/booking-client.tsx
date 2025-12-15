@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  FormEvent,
-  Suspense,
-  use,
-  useMemo,
-  useState,
-} from "react";
+import { FormEvent, Suspense, use, useEffect, useMemo, useState } from "react";
 import AvailabilityCalendar, {
   Booking,
   SelectedRange,
@@ -158,10 +152,17 @@ export default function BookingClient({
   const [error, setError] = useState<string | null>(null);
   const [attempted, setAttempted] = useState(false);
   const [gdprAccepted, setGdprAccepted] = useState(false);
+  const [guestInput, setGuestInput] = useState(() =>
+    initialForm.guests.toString()
+  );
+
+  useEffect(() => {
+    setGuestInput(String(form.guests ?? initialForm.guests));
+  }, [form.guests]);
 
   const selectedSummary = useMemo(() => {
     if (!selection.start && !selection.end)
-      return "Select your check-in and check-out dates.";
+      return "Select your check-in and check-out dates and the budget will be displayed.";
     if (selection.start && !selection.end)
       return `Check-in selected: ${selection.start}. Pick your check-out.`;
     if (selection.start && selection.end) {
@@ -339,18 +340,35 @@ export default function BookingClient({
                   />
                 </label>
                 <label className="form-field">
-                  <span>Guests</span>
+                  <span>Guests (max 4)</span>
                   <input
                     type="number"
                     min={1}
                     max={4}
-                    value={form.guests ?? 2}
+                    inputMode="numeric"
+                    value={guestInput}
                     onChange={(e) => {
                       const raw = e.target.value;
-                      const parsed = raw === "" ? 2 : Number(raw);
-                      const clamped = Number.isFinite(parsed)
-                        ? Math.max(1, Math.min(4, parsed))
-                        : 2;
+                      setGuestInput(raw);
+                      if (raw === "") return;
+                      const parsed = Number(raw);
+                      if (!Number.isFinite(parsed)) return;
+                      const clamped = Math.max(1, Math.min(4, parsed));
+                      setForm((prev) => ({ ...prev, guests: clamped }));
+                    }}
+                    onBlur={() => {
+                      const fallback = form.guests ?? initialForm.guests;
+                      if (guestInput.trim() === "") {
+                        setGuestInput(String(fallback));
+                        return;
+                      }
+                      const parsed = Number(guestInput);
+                      if (!Number.isFinite(parsed)) {
+                        setGuestInput(String(fallback));
+                        return;
+                      }
+                      const clamped = Math.max(1, Math.min(4, parsed));
+                      setGuestInput(String(clamped));
                       setForm((prev) => ({ ...prev, guests: clamped }));
                     }}
                     required
