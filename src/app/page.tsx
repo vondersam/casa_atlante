@@ -297,7 +297,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* <section className="section muted" id="to-do">
+      <section className="section muted" id="to-do">
         <div className="content-width">
           <div className="section-header">
             <p className="eyebrow">To do in the area</p>
@@ -309,44 +309,59 @@ export default function Home() {
           </div>
 
           <div className="list-grid">
-            <a
-              href="https://maps.app.goo.gl/BiCx97GW2YJdooCM9"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Jedey, between the Atlantic and Cumbre Vieja
-            </a>
-            <a
-              href="https://maps.app.goo.gl/kWh345yB5HWvn2aE6"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Charco Verde beach (17 minutes)
-            </a>
-            <a
-              href="https://maps.app.goo.gl/L4gUzowqwMXsXaqd8"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Puerto de Tazacorte beach and promenade (25 minutes)
-            </a>
-            <a
-              href="https://maps.app.goo.gl/4fLfdzPHkNRpU4Ue6"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Fuencaliente wineries and volcanic coast (30 minutes)
-            </a>
-            <a
-              href="https://maps.app.goo.gl/2NgdJfKJPX2bxn727"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Tajogaite volcano lava fields (3 km away)
-            </a>
+            <article>
+              <h3>Restaurants</h3>
+              <p>
+                La Palma has a deep bench of good restaurants. Nearby favorites
+                include Bodegón Tamanca and Restaurante El Secadero for local
+                recipes, plus El Trébol and La Taberna del Puerto in Puerto de
+                Tazacorte when you want seafood.
+              </p>
+            </article>
+            <article>
+              <h3>Beaches</h3>
+              <p>
+                Playa Puerto Naos and El Charco Verde are around 15 minutes
+                away, with El Remo just beyond. Puerto de Tazacorte mixes sandy
+                shores and restaurants, while the Fuencaliente coast hides Playa
+                Zamora (Chica and Grande) and Playa de Echentive near the
+                lighthouse and salt pans.
+              </p>
+            </article>
+            <article>
+              <h3>Volcanoes</h3>
+              <p>
+                Casa Atlante sits atop the 1585 Tihuya lava field overlooking El
+                Canalizo and the 1712 El Charco flows to the south. Tajogaite
+                (2021) is 5 minutes away, right beside the Caños de Fuego
+                interpretation centre and San Juan volcanic caves. Fuencaliente
+                (15 minutes) adds Teneguía (1971) to the list.
+              </p>
+              <p>Hike the 17.5 km Ruta de Los Volcanes through Cumbre Vieja</p>
+            </article>
+            <article>
+              <h3>The stars</h3>
+              <p>
+                Skies stay amazingly clear. Stargaze right from Casa Atlante, or
+                drive up to El Roque de Los Muchachos for observatories. A
+                closer option is the Mirador Astronómico del Llano del Jable,
+                about 45 minutes away.
+              </p>
+            </article>
+            <article>
+              <h3>The North</h3>
+              <p>
+                La Palma changes character up north. Explore El Cubo de la Galga
+                and Los Tilos for laurel forests and shaded hikes.
+              </p>
+            </article>
+            <article>
+              <h3>La Caldera de Taburiente</h3>
+              <p>A national-park jewel best enjoyed by camping overnight.</p>
+            </article>
           </div>
         </div>
-      </section> */}
+      </section>
 
       <section className="section" id="booking">
         <div className="content-width split-grid">
@@ -366,7 +381,6 @@ export default function Home() {
                 additional guest (up to 4).
               </p>
               <p>Check-in from 15:00; check-out by 10:00.</p>
-              <p>Tourist Licence number: VV-38-5-0001908.</p>
               <div className="hero-actions">
                 <Link className="btn secondary" href="/booking">
                   Check availability
