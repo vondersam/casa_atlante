@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, Suspense, use, useEffect, useMemo, useState } from "react";
+import { FormEvent, Suspense, use, useMemo, useState } from "react";
 import AvailabilityCalendar, {
   Booking,
   SelectedRange,
@@ -161,10 +161,6 @@ export default function BookingClient({
     initialForm.guests.toString()
   );
 
-  useEffect(() => {
-    setGuestInput(String(form.guests ?? initialForm.guests));
-  }, [form.guests]);
-
   const selectedSummary = useMemo(() => {
     if (!selection.start && !selection.end)
       return t("summarySelect");
@@ -179,7 +175,7 @@ export default function BookingClient({
       });
     }
     return "";
-  }, [selection]);
+  }, [selection, t]);
 
   const selectedNights = useMemo(
     () => nightsBetween(selection.start, selection.end),
@@ -262,6 +258,7 @@ export default function BookingClient({
 
     setStatus("success");
     setForm({ ...initialForm });
+    setGuestInput(initialForm.guests.toString());
     setGdprAccepted(false);
     setAttempted(false);
   }

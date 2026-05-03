@@ -56,8 +56,8 @@ export default function AvailabilityCalendar({
 }: AvailabilityCalendarProps) {
   const t = useT("calendar");
   const tCommon = useT("common");
-  const today = new Date();
   const minSelectable = useMemo(() => {
+    const today = new Date();
     const min = new Date(
       Date.UTC(
         today.getUTCFullYear(),
@@ -66,7 +66,7 @@ export default function AvailabilityCalendar({
       )
     );
     return toISODate(min);
-  }, [today]);
+  }, []);
   const [month, setMonth] = useState(() => {
     const now = new Date();
     return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));

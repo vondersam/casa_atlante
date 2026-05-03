@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useLocale, useT } from '@/i18n/context';
 import { localizePath, toCanonicalPath } from '@/i18n/path';
 import type { AppLocale } from '@/i18n/routing';
@@ -14,13 +14,11 @@ function Header() {
   const router = useRouter();
   const locale = useLocale();
   const t = useT('nav');
-  const [isOpen, setIsOpen] = useState(false);
+  const currentPath = pathname || '/';
+  const [openForPath, setOpenForPath] = useState<string | null>(null);
+  const isOpen = openForPath === currentPath;
 
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
-
-  const canonicalPath = useMemo(() => toCanonicalPath(pathname || '/'), [pathname]);
+  const canonicalPath = useMemo(() => toCanonicalPath(currentPath), [currentPath]);
 
   return (
     <header className="site-header">
@@ -33,7 +31,11 @@ function Header() {
           className={`nav-toggle ${isOpen ? 'open' : ''}`}
           aria-expanded={isOpen}
           aria-label={t('toggle')}
-          onClick={() => setIsOpen((open) => !open)}
+          onClick={() =>
+            setOpenForPath((openPath) =>
+              openPath === currentPath ? null : currentPath
+            )
+          }
         >
           <span />
           <span />
@@ -45,6 +47,7 @@ function Header() {
               key={href}
               href={localizePath(href, locale)}
               className={`nav-link ${canonicalPath === href ? 'active' : ''}`.trim()}
+              onClick={() => setOpenForPath(null)}
             >
               {t(href.slice(1))}
             </Link>
@@ -55,6 +58,7 @@ function Header() {
               aria-label={t('languageLabel')}
               onChange={(event) => {
                 const nextLocale = event.target.value as AppLocale;
+                setOpenForPath(null);
                 router.push(localizePath(canonicalPath, nextLocale));
               }}
             >
