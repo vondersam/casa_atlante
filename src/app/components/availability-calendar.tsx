@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useT } from "@/i18n/context";
 
 export type Booking = {
   start: string; // YYYY-MM-DD (inclusive)
@@ -33,10 +34,8 @@ export type AvailabilityCalendarProps = {
   onSelectRange?: (range: SelectedRange) => void;
 };
 
-const weekdayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-function formatMonth(date: Date) {
-  return new Intl.DateTimeFormat("en", {
+function formatMonth(date: Date, locale: string) {
+  return new Intl.DateTimeFormat(locale, {
     month: "long",
     year: "numeric",
     timeZone: "UTC",
@@ -55,6 +54,8 @@ export default function AvailabilityCalendar({
   selectedRange,
   onSelectRange,
 }: AvailabilityCalendarProps) {
+  const t = useT("calendar");
+  const tCommon = useT("common");
   const today = new Date();
   const minSelectable = useMemo(() => {
     const min = new Date(
@@ -176,20 +177,20 @@ export default function AvailabilityCalendar({
           className="calendar-nav"
           type="button"
           onClick={() => shiftMonth(-1)}
-          aria-label="Previous month"
+          aria-label={t("previousMonth")}
         >
           ←
         </button>
 
         <div>
-          <p className="eyebrow">Availability</p>
-          <div className="month-label">{formatMonth(month)}</div>
+          <p className="eyebrow">{t("availability")}</p>
+          <div className="month-label">{formatMonth(month, tCommon("localeTag"))}</div>
           {updatedAt ? (
             <p className="calendar-meta">
-              Synced {new Date(updatedAt).toLocaleString("en-GB", options)}
+              {t("synced")} {new Date(updatedAt).toLocaleString(tCommon("localeTag"), options)}
             </p>
           ) : (
-            <p className="calendar-meta">Syncing calendar…</p>
+            <p className="calendar-meta">{t("syncing")}</p>
           )}
         </div>
 
@@ -197,7 +198,7 @@ export default function AvailabilityCalendar({
           className="calendar-nav"
           type="button"
           onClick={() => shiftMonth(1)}
-          aria-label="Next month"
+          aria-label={t("nextMonth")}
         >
           →
         </button>
@@ -205,12 +206,12 @@ export default function AvailabilityCalendar({
 
       {error ? (
         <p className="calendar-status error">
-          {error || "Failed to load availability"}
+          {error || t("loadError")}
         </p>
       ) : (
         <>
           <div className="calendar-grid">
-            {weekdayLabels.map((day) => (
+            {[t("mon"), t("tue"), t("wed"), t("thu"), t("fri"), t("sat"), t("sun")].map((day) => (
               <div key={day} className="calendar-cell weekday">
                 {day}
               </div>
@@ -246,11 +247,11 @@ export default function AvailabilityCalendar({
                 .join(" ");
 
               const label = cell.isoDate
-                ? `${cell.isoDate} is ${
-                    cell.isBooked ? "booked" : "available"
-                  }${
-                    cell.isStart ? " (checkout day for previous booking)" : ""
-                  }${cell.isEnd ? " (check-in day for next booking)" : ""}`
+                ? `${t(cell.isBooked ? "dateBooked" : "dateAvailable", {
+                    date: cell.isoDate,
+                  })}${cell.isStart ? t("checkoutBoundary") : ""}${
+                    cell.isEnd ? t("checkinBoundary") : ""
+                  }`
                 : undefined;
 
               const handleClick = () => {
@@ -297,9 +298,9 @@ export default function AvailabilityCalendar({
 
           <div className="calendar-legend">
             <span className="legend-dot available" />
-            <span>Available</span>
+            <span>{t("available")}</span>
             <span className="legend-dot booked" />
-            <span>Booked</span>
+            <span>{t("booked")}</span>
           </div>
         </>
       )}

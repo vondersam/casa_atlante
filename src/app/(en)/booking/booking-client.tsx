@@ -4,7 +4,9 @@ import { FormEvent, Suspense, use, useEffect, useMemo, useState } from "react";
 import AvailabilityCalendar, {
   Booking,
   SelectedRange,
-} from "../components/availability-calendar";
+} from "@/app/components/availability-calendar";
+import { useLocale, useT } from "@/i18n/context";
+import { localizePath } from "@/i18n/path";
 
 type AvailabilitySnapshot = {
   bookings: Booking[];
@@ -61,6 +63,7 @@ function calculateQuote(nights: number, guests: number) {
 }
 
 function AvailabilityCalendarFallback() {
+  const t = useT("calendar");
   const weekdaySkeleton = Array.from({ length: 7 });
   const daySkeleton = Array.from({ length: 42 });
 
@@ -76,9 +79,9 @@ function AvailabilityCalendarFallback() {
           ←
         </button>
         <div>
-          <p className="eyebrow">Availability</p>
-          <div className="month-label">Loading calendar…</div>
-          <p className="calendar-meta">Syncing calendar…</p>
+          <p className="eyebrow">{t("availability")}</p>
+          <div className="month-label">{t("syncing")}</div>
+          <p className="calendar-meta">{t("syncing")}</p>
         </div>
         <button
           className="calendar-nav"
@@ -107,7 +110,7 @@ function AvailabilityCalendarFallback() {
       </div>
 
       <p className="calendar-status" role="status">
-        Loading availability…
+        {t("syncing")}
       </p>
     </div>
   );
@@ -141,6 +144,8 @@ function CalendarPanel({
 export default function BookingClient({
   availabilityPromise,
 }: BookingClientProps) {
+  const locale = useLocale();
+  const t = useT("booking");
   const [selection, setSelection] = useState<SelectedRange>({
     start: null,
     end: null,
@@ -162,14 +167,16 @@ export default function BookingClient({
 
   const selectedSummary = useMemo(() => {
     if (!selection.start && !selection.end)
-      return "Select your check-in and check-out dates and the budget will be displayed.";
+      return t("summarySelect");
     if (selection.start && !selection.end)
-      return `Check-in selected: ${selection.start}. Pick your check-out.`;
+      return t("summaryCheckIn", { start: selection.start });
     if (selection.start && selection.end) {
       const nights = nightsBetween(selection.start, selection.end);
-      return `Selected: ${selection.start} → ${
-        selection.end
-      } (checkout) • ${nights} night${nights === 1 ? "" : "s"}.`;
+      return t("summarySelected", {
+        start: selection.start,
+        end: selection.end,
+        nights,
+      });
     }
     return "";
   }, [selection]);
@@ -199,27 +206,27 @@ export default function BookingClient({
     e.preventDefault();
     setAttempted(true);
     if (!selection.start || !selection.end) {
-      setError("Please select check-in and check-out dates on the calendar.");
+      setError(t("errorSelectDates"));
       return;
     }
 
     if (selectedNights < MIN_NIGHTS) {
-      setError("Minimum stay is 4 nights. Please adjust your dates.");
+      setError(t("errorMinStay"));
       return;
     }
 
     if (!form.firstName.trim() || !form.lastName.trim()) {
-      setError("Please enter your name and surname.");
+      setError(t("errorName"));
       return;
     }
 
     if (!form.email.trim()) {
-      setError("Please enter your email.");
+      setError(t("errorEmail"));
       return;
     }
 
     if (!form.message.trim()) {
-      setError("Please enter a message.");
+      setError(t("errorMessage"));
       return;
     }
 
@@ -235,6 +242,7 @@ export default function BookingClient({
         lastName: form.lastName.trim(),
         email: form.email.trim(),
         message: form.message.trim(),
+        locale,
         guests: form.guests,
         start: selection.start,
         end: selection.end,
@@ -248,7 +256,7 @@ export default function BookingClient({
 
     if (!res.ok) {
       setStatus("error");
-      setError(data?.error || "Failed to send request. Please try again.");
+      setError(data?.error || t("errorSend"));
       return;
     }
 
@@ -262,11 +270,10 @@ export default function BookingClient({
     <section className="section">
       <div className="content-width">
         <div className="section-header">
-          <p className="eyebrow">Booking</p>
-          <h1>Plan your stay</h1>
+          <p className="eyebrow">{t("eyebrow")}</p>
+          <h1>{t("title")}</h1>
           <p className="lead">
-            Check real-time availability, select your dates, and send us a
-            booking request. We&apos;ll confirm rates and arrival details.
+            {t("lead")}
           </p>
         </div>
 
@@ -286,25 +293,24 @@ export default function BookingClient({
 
           <div className="booking-card">
             <div>
-              <h3>Booking request</h3>
+              <h3>{t("requestTitle")}</h3>
               <ul>
-                <li>90 euros per night for two guests</li>
+                <li>{t("price1")}</li>
                 <li>
-                  20 euros per night for each additional guest (sleeps max. 4)
+                  {t("price2")}
                 </li>
                 <li>
-                  Prices exclude IGIC (VAT), which is 7% and added to the final
-                  price
+                  {t("price3")}
                 </li>
                 <li>
-                  Check-out time is 10:00 AM; check-in from 15:00 PM or later
+                  {t("price4")}
                 </li>
               </ul>
             </div>
             <form className="booking-form" onSubmit={handleSubmit}>
               <div className="form-grid">
                 <label className="form-field">
-                  <span>Name</span>
+                  <span>{t("name")}</span>
                   <input
                     type="text"
                     value={form.firstName}
@@ -318,7 +324,7 @@ export default function BookingClient({
                   />
                 </label>
                 <label className="form-field">
-                  <span>Surname</span>
+                  <span>{t("surname")}</span>
                   <input
                     type="text"
                     value={form.lastName}
@@ -329,7 +335,7 @@ export default function BookingClient({
                   />
                 </label>
                 <label className="form-field">
-                  <span>Email</span>
+                  <span>{t("email")}</span>
                   <input
                     type="email"
                     value={form.email}
@@ -340,7 +346,7 @@ export default function BookingClient({
                   />
                 </label>
                 <label className="form-field">
-                  <span>Guests (max 4)</span>
+                  <span>{t("guests")}</span>
                   <input
                     type="number"
                     min={1}
@@ -377,35 +383,35 @@ export default function BookingClient({
               </div>
 
               <label className="form-field">
-                <span>Message</span>
+                <span>{t("message")}</span>
                 <textarea
                   rows={4}
                   value={form.message}
                   onChange={(e) =>
                     setForm((prev) => ({ ...prev, message: e.target.value }))
                   }
-                  placeholder="Message to host"
+                  placeholder={t("messagePlaceholder")}
                   required
                 />
               </label>
 
               <p className="muted small">{selectedSummary}</p>
               {selectedNights > 0 && selectedNights < MIN_NIGHTS && (
-                <p className="form-error">Minimum stay is 4 nights.</p>
+                <p className="form-error">{t("errorMinStayInline")}</p>
               )}
               {quote && selectedNights >= MIN_NIGHTS && (
                 <div className="quote">
-                  <p className="muted small">Price breakdown</p>
+                  <p className="muted small">{t("priceBreakdown")}</p>
                   <div className="quote-line">
-                    <span>Base (includes {INCLUDED_GUESTS} guests)</span>
-                    <span>€{NIGHTLY_BASE.toFixed(2)}/night</span>
+                    <span>{t("baseIncludes", { guests: INCLUDED_GUESTS })}</span>
+                    <span>€{NIGHTLY_BASE.toFixed(2)}{t("perNight")}</span>
                   </div>
                   <div className="quote-line">
-                    <span>Extra guests</span>
+                    <span>{t("extraGuests")}</span>
                     <span>
-                      {quote.extraGuests} × €{EXTRA_GUEST_FEE.toFixed(2)}/night
-                      × {quote.nights} night
-                      {quote.nights === 1 ? "" : "s"} = €
+                      {quote.extraGuests} × €{EXTRA_GUEST_FEE.toFixed(2)}
+                      {t("perNight")} × {quote.nights}{" "}
+                      {t(quote.nights === 1 ? "nightSingular" : "nightPlural")} = €
                       {(
                         quote.extraGuests *
                         EXTRA_GUEST_FEE *
@@ -414,19 +420,19 @@ export default function BookingClient({
                     </span>
                   </div>
                   <div className="quote-line">
-                    <span>Nights</span>
+                    <span>{t("nights")}</span>
                     <span>{quote.nights}</span>
                   </div>
                   <div className="quote-line">
-                    <span>Subtotal</span>
+                    <span>{t("subtotal")}</span>
                     <span>€{quote.subtotal.toFixed(2)}</span>
                   </div>
                   <div className="quote-line">
-                    <span>IGIC (VAT) (7%)</span>
+                    <span>{t("igic")}</span>
                     <span>€{quote.tax.toFixed(2)}</span>
                   </div>
                   <div className="quote-line total">
-                    <span>Total</span>
+                    <span>{t("total")}</span>
                     <span>€{quote.total.toFixed(2)}</span>
                   </div>
                 </div>
@@ -435,14 +441,13 @@ export default function BookingClient({
               {error && <p className="form-error">{error}</p>}
               {status === "success" && (
                 <p className="form-success">
-                  Request sent. We&apos;ll reply shortly.
+                  {t("success")}
                 </p>
               )}
 
               {!canSubmit && attempted && !error && (
                 <p className="form-error">
-                  Please complete all fields, pick check-in and check-out (min 4
-                  nights), add your message, and accept the GDPR notice.
+                  {t("completeAll")}
                 </p>
               )}
 
@@ -454,22 +459,21 @@ export default function BookingClient({
                   required
                 />
                 <span>
-                  I agree to the{" "}
+                  {t("gdprAgree1")} {" "}
                   <a
                     className="gdpr-link"
-                    href="/privacy"
+                    href={localizePath('/privacy', locale)}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    GDPR notice
+                    {t("gdprNotice")}
                   </a>{" "}
-                  and consent to my data being used to process this booking
-                  request.
+                  {t("gdprAgree2")}
                 </span>
               </label>
               {!gdprAccepted && attempted && (
                 <p className="form-error">
-                  Please accept the GDPR notice to proceed.
+                  {t("gdprRequired")}
                 </p>
               )}
 
@@ -479,7 +483,7 @@ export default function BookingClient({
                   type="submit"
                   disabled={status === "submitting"}
                 >
-                  {status === "submitting" ? "Sending..." : "Send request"}
+                  {status === "submitting" ? t("sending") : t("send")}
                 </button>
               </div>
             </form>

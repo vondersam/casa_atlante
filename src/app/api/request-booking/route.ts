@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { getServerT } from "@/lib/server-translations";
 
 type BookingRequestPayload = {
+  locale?: "en" | "es";
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -33,8 +35,11 @@ export async function POST(req: NextRequest) {
   const body = (await req
     .json()
     .catch(() => null)) as BookingRequestPayload | null;
+  const locale = body?.locale === "es" ? "es" : "en";
+  const t = await getServerT(locale, "apiBooking");
+
   if (!body)
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    return NextResponse.json({ error: t("invalidRequest") }, { status: 400 });
 
   const firstName = body.firstName?.trim();
   const lastName = body.lastName?.trim();
@@ -43,22 +48,20 @@ export async function POST(req: NextRequest) {
   const start = normalizeDate(body.start);
   const end = normalizeDate(body.end);
   const guests = Number.isFinite(body.guests) ? Number(body.guests) : null;
-  const clientQuote = body.quote;
-
   if (!firstName || !lastName) {
     return NextResponse.json(
-      { error: "Name and surname are required." },
+      { error: t("nameRequired") },
       { status: 400 }
     );
   }
 
   if (!fromEmail) {
-    return NextResponse.json({ error: "Email is required." }, { status: 400 });
+    return NextResponse.json({ error: t("emailRequired") }, { status: 400 });
   }
 
   if (!start || !end) {
     return NextResponse.json(
-      { error: "Check-in and check-out dates are required." },
+      { error: t("datesRequired") },
       { status: 400 }
     );
   }
@@ -68,21 +71,21 @@ export async function POST(req: NextRequest) {
     new Date(`${start}T00:00:00Z`).getTime()
   ) {
     return NextResponse.json(
-      { error: "Check-out must be after check-in." },
+      { error: t("checkoutAfter") },
       { status: 400 }
     );
   }
 
   if (!guests || guests < 1 || guests > 4) {
     return NextResponse.json(
-      { error: "Guest count must be between 1 and 4." },
+      { error: t("guestRange") },
       { status: 400 }
     );
   }
 
   if (!message) {
     return NextResponse.json(
-      { error: "Message is required." },
+      { error: t("messageRequired") },
       { status: 400 }
     );
   }
@@ -95,7 +98,7 @@ export async function POST(req: NextRequest) {
 
   if (stayNights < MIN_NIGHTS) {
     return NextResponse.json(
-      { error: "Minimum stay is 4 nights. Please adjust your dates." },
+      { error: t("minStay") },
       { status: 400 }
     );
   }
@@ -110,7 +113,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error:
-          "Email is not configured. Set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, and provide a sender email.",
+          t("emailNotConfigured"),
       },
       { status: 500 }
     );
@@ -126,7 +129,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  const subject = `Booking request: ${start} → ${end} from ${firstName} ${lastName}`;
+  const subject = t("subjectOwner", { start, end, firstName, lastName });
   const nights = stayNights;
   const extraGuests = Math.max(0, Math.min(guests - 2, 2));
   const nightly = 90 + extraGuests * 20;
@@ -136,22 +139,20 @@ export async function POST(req: NextRequest) {
   const extraGuestsTotal = extraGuests * 20 * nights;
 
   const text = [
-    `Name: ${firstName} ${lastName}`,
-    `Email: ${fromEmail}`,
-    `Guests: ${guests}`,
-    `Check-in: ${start}`,
-    `Check-out: ${end}`,
+    t("lineName", { firstName, lastName }),
+    t("lineEmail", { fromEmail }),
+    t("lineGuests", { guests }),
+    t("lineCheckin", { start }),
+    t("lineCheckout", { end }),
     "",
-    "Price breakdown:",
-    `- Nights: ${nights}`,
-    `- Nightly base (includes 2 guests): €90.00`,
-    `- Extra guests: ${extraGuests} × €20.00/night × ${nights} nights = €${extraGuestsTotal.toFixed(
-      2
-    )}`,
-    `- Applied nightly rate: €${nightly.toFixed(2)}`,
-    `- Subtotal: €${subtotal.toFixed(2)}`,
-    `- IGIC (VAT) 7%: €${tax.toFixed(2)}`,
-    `- Total: €${total.toFixed(2)}`,
+    t("priceBreakdown"),
+    t("lineNights", { nights }),
+    t("lineNightlyBase"),
+    t("lineExtraGuests", { extraGuests, nights, extraGuestsTotal: extraGuestsTotal.toFixed(2) }),
+    t("lineAppliedNightly", { nightly: nightly.toFixed(2) }),
+    t("lineSubtotal", { subtotal: subtotal.toFixed(2) }),
+    t("lineTax", { tax: tax.toFixed(2) }),
+    t("lineTotal", { total: total.toFixed(2) }),
     "",
     message ? `Message:\n${message}` : "Message: (none provided)",
   ].join("\n");
@@ -173,9 +174,9 @@ export async function POST(req: NextRequest) {
     await transporter.sendMail({
       from: toEmail,
       to: fromEmail,
-      subject: `Casa Atlante - Copy of your booking request: ${start} → ${end}`,
+      subject: t("subjectGuest", { start, end }),
       text: [
-        "We confirm we have received your request and we will reply as soon as possible.",
+        t("guestIntro"),
         "",
         text,
       ].join("\n"),
@@ -183,7 +184,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     return NextResponse.json(
-      { error: `Failed to send email: ${(err as Error).message}` },
+      { error: t("sendFailed", { message: (err as Error).message }) },
       { status: 502 }
     );
   }

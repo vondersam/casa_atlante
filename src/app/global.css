@@ -247,6 +247,55 @@ main {
   border-color: var(--text);
 }
 
+.language-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  font-size: 0.86rem;
+  letter-spacing: 0.18em;
+  padding-bottom: 6px;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+}
+
+.language-selector:hover,
+.language-selector:focus-within {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.language-selector::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  pointer-events: none;
+}
+
+.language-selector select {
+  appearance: none;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: 1.2;
+  padding: 0;
+  cursor: pointer;
+}
+
+.language-selector select:focus-visible {
+  outline: 0;
+}
+
+.language-selector option {
+  color: var(--text);
+}
+
 .nav-toggle {
   display: none;
   background: none;

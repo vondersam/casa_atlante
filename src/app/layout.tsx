@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import { Playfair_Display, Source_Sans_3 } from 'next/font/google';
 import './global.css';
-import Header from './components/header';
-import Footer from './components/footer';
 
 const headingFont = Playfair_Display({
   subsets: ['latin'],
@@ -19,10 +17,11 @@ const bodyFont = Source_Sans_3({
 export const metadata: Metadata = {
   title: 'Casa Atlante',
   description:
-    'Beautiful ocean view holiday rental home, situated on the sunny west of the island of La Palma, in the Jedey neighbourhood.'
+    'Beautiful ocean view holiday rental home, situated on the sunny west of the island of La Palma, in the Jedey neighbourhood.',
+  metadataBase: new URL('https://www.casa-atlante.com')
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: {
   children: React.ReactNode;
@@ -30,11 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${bodyFont.variable} ${headingFont.variable}`}>
-        <div className="page-shell">
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </div>
+        {children}
       </body>
     </html>
   );
