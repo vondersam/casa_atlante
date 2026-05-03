@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import ImageLightbox from "@/app/components/image-lightbox";
 import getAlt from "@/app/helpers/getAlt";
 import { useLocale } from "@/i18n/context";
 import { localizePath } from "@/i18n/path";
@@ -31,6 +32,11 @@ const galleryImages = [
   "/gallery/ruta-de-los-volcanes.jpeg",
   "/gallery/stargazing.jpeg",
 ];
+
+const introImage = "/carousel/house-front-entrance.jpg";
+const trailsImage = "/gallery/cumbre-vieja-natural-park.jpg";
+const oceanImage = "/carousel/sunset-on-ocean-view.jpg";
+const essentialsImage = "/carousel/los-llanos-de-aridane.jpg";
 
 export default function Home() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -80,8 +86,8 @@ export default function Home() {
           <div className="stacked-images">
             <div className="image-frame aspect-16-10">
               <Image
-                src="/carousel/house-front-entrance.jpg"
-                alt="Casa Atlante entrance with ocean backdrop"
+                src={introImage}
+                alt={getAlt(introImage)}
                 fill
                 sizes="(max-width: 900px) 100vw, 50vw"
                 className="media-fill"
@@ -168,8 +174,8 @@ export default function Home() {
             <article className="story-card">
               <div className="image-frame aspect-16-10">
                 <Image
-                  src="/gallery/cumbre-vieja-natural-park.jpg"
-                  alt="Cumbre Vieja Natural Park landscape"
+                  src={trailsImage}
+                  alt={getAlt(trailsImage)}
                   fill
                   sizes="(max-width: 900px) 100vw, 32vw"
                   className="media-fill"
@@ -185,8 +191,8 @@ export default function Home() {
             <article className="story-card">
               <div className="image-frame aspect-16-10">
                 <Image
-                  src="/carousel/sunset-on-ocean-view.jpg"
-                  alt="Atlantic ocean view from Casa Atlante"
+                  src={oceanImage}
+                  alt={getAlt(oceanImage)}
                   fill
                   sizes="(max-width: 900px) 100vw, 32vw"
                   className="media-fill"
@@ -203,8 +209,8 @@ export default function Home() {
             <article className="story-card">
               <div className="image-frame aspect-16-10">
                 <Image
-                  src="/carousel/los-llanos-de-aridane.jpg"
-                  alt="Lava field near Casa Atlante"
+                  src={essentialsImage}
+                  alt={getAlt(essentialsImage)}
                   fill
                   sizes="(max-width: 900px) 100vw, 32vw"
                   className="media-fill"
@@ -234,24 +240,34 @@ export default function Home() {
           </div>
 
           <div className="gallery-grid">
-            {galleryImages.map((src) => (
-              <div
-                key={src}
-                className="gallery-card"
-                onClick={() => setSelectedImage(src)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && setSelectedImage(src)}
-              >
-                <Image
-                  src={src}
-                  alt={getAlt(src)}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 30vw"
-                  className="media-fill"
-                />
-              </div>
-            ))}
+            {galleryImages.map((src) => {
+              const description = getAlt(src);
+
+              return (
+                <div
+                  key={src}
+                  className="gallery-card"
+                  onClick={() => setSelectedImage(src)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={description}
+                  onKeyDown={(e) => {
+                    if (e.key !== "Enter" && e.key !== " ") return;
+
+                    e.preventDefault();
+                    setSelectedImage(src);
+                  }}
+                >
+                  <Image
+                    src={src}
+                    alt={description}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 30vw"
+                    className="media-fill"
+                  />
+                </div>
+              );
+            })}
           </div>
 
           <div className="hero-actions" style={{ marginTop: "22px" }}>
@@ -415,14 +431,13 @@ export default function Home() {
         </div>
       </section>
 
-      {selectedImage && (
-        <div className="lightbox" role="dialog" aria-modal="true">
-          <button onClick={() => setSelectedImage(null)} aria-label="Close">
-            Close
-          </button>
-          <img src={selectedImage} alt={getAlt(selectedImage)} />
-        </div>
-      )}
+      <ImageLightbox
+        images={galleryImages}
+        selectedImage={selectedImage}
+        onSelect={setSelectedImage}
+        onClose={() => setSelectedImage(null)}
+        closeLabel="Close"
+      />
     </>
   );
 }

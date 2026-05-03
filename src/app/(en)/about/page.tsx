@@ -1,4 +1,7 @@
 import Image from "next/image";
+import getAlt from "@/app/helpers/getAlt";
+
+const beforeRenovationImage = "/gallery/casa-atlante-before-renovation.jpg";
 
 export default function About() {
   return (
@@ -45,8 +48,8 @@ export default function About() {
 
         <div className="image-full">
           <Image
-            src="/gallery/casa-atlante-before-renovation.jpg"
-            alt="Casa Atlante before renovation"
+            src={beforeRenovationImage}
+            alt={getAlt(beforeRenovationImage)}
             width={1200}
             height={900}
             sizes="(max-width: 900px) 100vw, 50vw"
