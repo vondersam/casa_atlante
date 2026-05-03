@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import ImageLightbox from '@/app/components/image-lightbox';
 import getAlt from '@/app/helpers/getAlt';
 
 const filenames = [
@@ -60,35 +61,44 @@ export default function Gallery() {
         </div>
 
         <div className="gallery-grid">
-          {filenames.map((filename) => (
-            <div
-              key={filename}
-              className="gallery-card"
-              onClick={() => setSelectedImage(filename)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && setSelectedImage(filename)}
-            >
-              <Image
-                src={filename}
-                alt={getAlt(filename)}
-                fill
-                sizes="(max-width: 768px) 100vw, 30vw"
-                className="media-fill"
-              />
-            </div>
-          ))}
+          {filenames.map((filename) => {
+            const description = getAlt(filename);
+
+            return (
+              <div
+                key={filename}
+                className="gallery-card"
+                onClick={() => setSelectedImage(filename)}
+                role="button"
+                tabIndex={0}
+                aria-label={description}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter' && e.key !== ' ') return;
+
+                  e.preventDefault();
+                  setSelectedImage(filename);
+                }}
+              >
+                <Image
+                  src={filename}
+                  alt={description}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 30vw"
+                  className="media-fill"
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {selectedImage && (
-        <div className="lightbox" role="dialog" aria-modal="true">
-          <button onClick={() => setSelectedImage(null)} aria-label="Close">
-            Close
-          </button>
-          <img src={selectedImage} alt={getAlt(selectedImage)} />
-        </div>
-      )}
+      <ImageLightbox
+        images={filenames}
+        selectedImage={selectedImage}
+        onSelect={setSelectedImage}
+        onClose={() => setSelectedImage(null)}
+        closeLabel="Close"
+      />
     </section>
   );
 }
