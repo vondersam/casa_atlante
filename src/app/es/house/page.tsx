@@ -47,7 +47,7 @@ export default function TheHome() {
           <article className="feature-card">
             <h3>Dormitorio principal</h3>
             <ul>
-              <li>Cama queen size (160x200 cm)</li>
+              <li>Cama doble (160x200 cm)</li>
               <li>Puerta corredera con vistas al Atlántico</li>
               <li>Armario de madera con amplio espacio de almacenaje</li>
             </ul>
@@ -103,7 +103,7 @@ export default function TheHome() {
         <div className="booking-card" style={{ marginTop: "28px" }}>
           <h3>Precios y llegada</h3>
           <ul>
-            <li>90 euros por noche para dos huéspedes</li>
+            <li>90 euros por noche por dos huéspedes</li>
             <li>20 euros por noche por cada huésped adicional (máximo 4)</li>
             <li>
               Los precios no incluyen IGIC (IVA), que es del 7% y se añade al

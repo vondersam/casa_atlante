@@ -72,7 +72,7 @@ const spanishAltText: Record<string, string> = {
   'los-llanos-de-aridane': 'Los Llanos de Aridane',
   'main-bedroom-with-ocean-views': 'Dormitorio principal con vistas al océano',
   'main-room-ocean-view': 'Dormitorio principal con vistas al océano',
-  'main-room-queen-bed': 'Cama queen en el dormitorio principal',
+  'main-room-queen-bed': 'Cama doble en el dormitorio principal',
   'mountain-view': 'Vista de la montaña',
   'ocean-view-from-terrace': 'Vista del océano desde la terraza',
   'ocean-view-hierro': 'Vista del océano hacia El Hierro',
