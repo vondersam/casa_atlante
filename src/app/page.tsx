@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import getAlt from "./helpers/getAlt";
+import { useLocale } from "@/i18n/context";
+import { localizePath } from "@/i18n/path";
 
 const galleryImages = [
   "/gallery/casa-atlante-front.jpg",
@@ -32,6 +34,7 @@ const galleryImages = [
 
 export default function Home() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const locale = useLocale();
 
   return (
     <>
@@ -252,7 +255,7 @@ export default function Home() {
           </div>
 
           <div className="hero-actions" style={{ marginTop: "22px" }}>
-            <Link className="btn secondary" href="/gallery">
+            <Link className="btn secondary" href={localizePath("/gallery", locale)}>
               View full gallery
             </Link>
           </div>
@@ -382,7 +385,7 @@ export default function Home() {
               </p>
               <p>Check-in from 15:00; check-out by 10:00.</p>
               <div className="hero-actions">
-                <Link className="btn secondary" href="/booking">
+                <Link className="btn secondary" href={localizePath("/booking", locale)}>
                   Check availability
                 </Link>
               </div>
