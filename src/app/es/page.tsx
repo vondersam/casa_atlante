@@ -73,7 +73,7 @@ export default function Home() {
               Casa Atlante es una vivienda de 46 m² totalmente renovada,
               pensada para días tranquilos y sin prisas. Sus grandes terrazas
               enmarcan vistas infinitas al océano, mientras el interior es
-              luminoso, sencillo y está amueblado con piezas que construimos
+              luminoso, sencillo y está amueblado con muebles que construimos
               nosotros mismos.
             </p>
             <p>
@@ -107,8 +107,8 @@ export default function Home() {
             <h2>Diseñada para días cómodos y sin prisas</h2>
             <p className="lead">
               Desde paseos al amanecer hasta atardeceres lentos, Casa Atlante
-              está preparada para parejas, amistades o personas que trabajan en
-              remoto y buscan una base tranquila con todo a mano.
+              está preparada para parejas, amigos o teletrabajadores
+              que buscan una base tranquila con todo a mano.
             </p>
           </div>
 
@@ -117,7 +117,7 @@ export default function Home() {
               <h3>La casa</h3>
               <ul>
                 <li>
-                  2 dormitorios: cama queen en la habitación principal y dos
+                  2 dormitorios: cama doble en la habitación principal y dos
                   camas individuales en la segunda
                 </li>
                 <li>Cocina abierta y salón luminoso con vistas al Atlántico</li>
@@ -154,9 +154,8 @@ export default function Home() {
             <h2>Entre el Atlántico y Cumbre Vieja</h2>
             <p className="lead">
               Casa Atlante se encuentra en la tranquila zona de Jedey, dentro de
-              la Red Natura 2000 de Tamanca. Los senderos empiezan a la puerta
-              de casa, y las playas, pueblos y campos de lava están a pocos
-              minutos en coche.
+              la Red Natura 2000 de Tamanca. Está rodeada de senderos, y con playas, Servicios
+              y malpaíses a poca distancia en coche.
             </p>
           </div>
 
@@ -171,7 +170,7 @@ export default function Home() {
                   className="media-fill"
                 />
               </div>
-              <h3>Senderos desde la puerta</h3>
+              <h3>Senderos alrededor de la casa</h3>
               <p>
                 Camina por el Parque Natural de Cumbre Vieja y el paisaje
                 protegido de Tamanca directamente desde la casa. La zona es un
@@ -284,9 +283,8 @@ export default function Home() {
             <article className="feature-card">
               <h3>Atardeceres sin interrupciones</h3>
               <p>
-                Las terrazas orientadas al oeste reciben sol durante todo el día
-                y se vuelven doradas cada tarde, perfectas para cenas lentas o
-                para mirar las estrellas.
+                Las terrazas orientadas al oeste reciben sol durante todo el día. Los atardeceres
+                son perfectos para largas cenas hasta que el cielo se cubre de estrellas.
               </p>
             </article>
             <article className="feature-card">
