@@ -247,11 +247,11 @@ export default function AvailabilityCalendar({
                 .join(" ");
 
               const label = cell.isoDate
-                ? `${cell.isoDate} is ${
-                    cell.isBooked ? "booked" : "available"
-                  }${
-                    cell.isStart ? " (checkout day for previous booking)" : ""
-                  }${cell.isEnd ? " (check-in day for next booking)" : ""}`
+                ? `${t(cell.isBooked ? "dateBooked" : "dateAvailable", {
+                    date: cell.isoDate,
+                  })}${cell.isStart ? t("checkoutBoundary") : ""}${
+                    cell.isEnd ? t("checkinBoundary") : ""
+                  }`
                 : undefined;
 
               const handleClick = () => {

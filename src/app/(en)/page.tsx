@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import getAlt from "./helpers/getAlt";
+import getAlt from "@/app/helpers/getAlt";
 import { useLocale } from "@/i18n/context";
 import { localizePath } from "@/i18n/path";
 

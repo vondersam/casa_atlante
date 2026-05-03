@@ -12,7 +12,10 @@
     "location": "Location",
     "gallery": "Gallery",
     "booking": "Booking",
-    "about": "About"
+    "about": "About",
+    "languageLabel": "Language",
+    "languageEnglish": "English",
+    "languageSpanish": "Spanish"
   },
   "footer": {
     "license": "Tourist Licence: VV-38-5-0001908",
@@ -48,7 +51,11 @@
     "sat": "Sat",
     "sun": "Sun",
     "available": "Available",
-    "booked": "Booked"
+    "booked": "Booked",
+    "dateAvailable": "{date} is available",
+    "dateBooked": "{date} is booked",
+    "checkoutBoundary": " (checkout day for previous booking)",
+    "checkinBoundary": " (check-in day for next booking)"
   },
   "booking": {
     "eyebrow": "Booking",
@@ -78,6 +85,9 @@
     "priceBreakdown": "Price breakdown",
     "baseIncludes": "Base (includes {guests} guests)",
     "extraGuests": "Extra guests",
+    "perNight": "/night",
+    "nightSingular": "night",
+    "nightPlural": "nights",
     "nights": "Nights",
     "subtotal": "Subtotal",
     "igic": "IGIC (VAT) (7%)",

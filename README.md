@@ -4,7 +4,7 @@ Website for the holiday home rental Casa Atlante, located on the island of La Pa
 
 - Default locale is English and uses unprefixed URLs (`/`, `/booking`).
 - Spanish uses `/es` prefixed routes (`/es`, `/es/booking`).
-- Middleware rewrites locale-prefixed requests and injects locale headers consumed by the app layout.
+- English and Spanish routes are real App Router routes with fixed-locale layouts, so the language selector does not depend on request rewrites.
 
 ## Translation files
 

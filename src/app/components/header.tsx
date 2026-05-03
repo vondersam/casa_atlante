@@ -1,15 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocale, useT } from '@/i18n/context';
 import { localizePath, toCanonicalPath } from '@/i18n/path';
+import type { AppLocale } from '@/i18n/routing';
 
 const navPaths = ['/house', '/location', '/gallery', '/booking', '/about'] as const;
 
 function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const locale = useLocale();
   const t = useT('nav');
   const [isOpen, setIsOpen] = useState(false);
@@ -47,15 +49,19 @@ function Header() {
               {t(href.slice(1))}
             </Link>
           ))}
-          <div className="nav-link" style={{ display: 'flex', gap: 8 }}>
-            <Link href={localizePath(canonicalPath, 'en')} aria-label="Switch to English">
-              EN
-            </Link>
-            <span>|</span>
-            <Link href={localizePath(canonicalPath, 'es')} aria-label="Cambiar a español">
-              ES
-            </Link>
-          </div>
+          <label className="language-selector">
+            <select
+              value={locale}
+              aria-label={t('languageLabel')}
+              onChange={(event) => {
+                const nextLocale = event.target.value as AppLocale;
+                router.push(localizePath(canonicalPath, nextLocale));
+              }}
+            >
+              <option value="en">{t('languageEnglish')}</option>
+              <option value="es">{t('languageSpanish')}</option>
+            </select>
+          </label>
         </nav>
       </div>
     </header>

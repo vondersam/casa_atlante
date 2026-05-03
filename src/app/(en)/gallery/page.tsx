@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import getAlt from '../helpers/getAlt';
+import getAlt from '@/app/helpers/getAlt';
 
 const filenames = [
   '/gallery/bathroom-with-mountain-views.jpg',

@@ -12,7 +12,10 @@
     "location": "Ubicación",
     "gallery": "Galería",
     "booking": "Reservas",
-    "about": "Sobre mí"
+    "about": "Sobre mí",
+    "languageLabel": "Idioma",
+    "languageEnglish": "Inglés",
+    "languageSpanish": "Español"
   },
   "footer": {
     "license": "Licencia turística: VV-38-5-0001908",
@@ -48,7 +51,11 @@
     "sat": "Sáb",
     "sun": "Dom",
     "available": "Disponible",
-    "booked": "Reservado"
+    "booked": "Reservado",
+    "dateAvailable": "{date} está disponible",
+    "dateBooked": "{date} está reservado",
+    "checkoutBoundary": " (día de salida de la reserva anterior)",
+    "checkinBoundary": " (día de entrada de la siguiente reserva)"
   },
   "booking": {
     "eyebrow": "Reservas",
@@ -78,6 +85,9 @@
     "priceBreakdown": "Desglose de precios",
     "baseIncludes": "Base (incluye {guests} huéspedes)",
     "extraGuests": "Huéspedes adicionales",
+    "perNight": "/noche",
+    "nightSingular": "noche",
+    "nightPlural": "noches",
     "nights": "Noches",
     "subtotal": "Subtotal",
     "igic": "IGIC (IVA) (7%)",

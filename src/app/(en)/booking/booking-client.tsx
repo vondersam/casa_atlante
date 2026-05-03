@@ -4,7 +4,7 @@ import { FormEvent, Suspense, use, useEffect, useMemo, useState } from "react";
 import AvailabilityCalendar, {
   Booking,
   SelectedRange,
-} from "../components/availability-calendar";
+} from "@/app/components/availability-calendar";
 import { useLocale, useT } from "@/i18n/context";
 import { localizePath } from "@/i18n/path";
 
@@ -404,14 +404,14 @@ export default function BookingClient({
                   <p className="muted small">{t("priceBreakdown")}</p>
                   <div className="quote-line">
                     <span>{t("baseIncludes", { guests: INCLUDED_GUESTS })}</span>
-                    <span>€{NIGHTLY_BASE.toFixed(2)}/night</span>
+                    <span>€{NIGHTLY_BASE.toFixed(2)}{t("perNight")}</span>
                   </div>
                   <div className="quote-line">
                     <span>{t("extraGuests")}</span>
                     <span>
-                      {quote.extraGuests} × €{EXTRA_GUEST_FEE.toFixed(2)}/night
-                      × {quote.nights} night
-                      {quote.nights === 1 ? "" : "s"} = €
+                      {quote.extraGuests} × €{EXTRA_GUEST_FEE.toFixed(2)}
+                      {t("perNight")} × {quote.nights}{" "}
+                      {t(quote.nights === 1 ? "nightSingular" : "nightPlural")} = €
                       {(
                         quote.extraGuests *
                         EXTRA_GUEST_FEE *
