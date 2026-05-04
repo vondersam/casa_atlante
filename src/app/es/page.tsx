@@ -387,7 +387,7 @@ export default function Home() {
 
             <div className="booking-card">
               <p>
-                Tarifas: 90 € por noche para dos huéspedes. 20 € por noche por
+                Tarifas: 90 € por noche por dos huéspedes. 20 € por noche por
                 cada huésped adicional (hasta 4).
               </p>
               <p>Entrada desde las 15:00; salida antes de las 10:00.</p>
