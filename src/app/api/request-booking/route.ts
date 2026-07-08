@@ -40,8 +40,19 @@ function formatDate(value: string, locale: "en" | "es") {
 }
 
 function paymentDueDate(start: string) {
-  const date = new Date(`${start}T00:00:00Z`);
-  date.setUTCDate(date.getUTCDate() - 56);
+  const today = new Date();
+  const currentDate = new Date(Date.UTC(
+    today.getUTCFullYear(),
+    today.getUTCMonth(),
+    today.getUTCDate()
+  ));
+  const checkInDate = new Date(`${start}T00:00:00Z`);
+  const daysUntilCheckIn = Math.round(
+    (checkInDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24)
+  );
+  const dueInDays = daysUntilCheckIn >= 15 ? 10 : 1;
+  const date = new Date(currentDate);
+  date.setUTCDate(date.getUTCDate() + dueInDays);
   return date.toISOString().slice(0, 10);
 }
 
