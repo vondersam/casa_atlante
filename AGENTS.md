@@ -35,4 +35,12 @@
 
 GitNexus is the required code-intelligence system for this repository.
 
-Before investigating or modifying code, check the GitNexus repository context or run `npx -y gitnexus@X.Y.Z status`. If the index is missing or stale, run `npx -y gitnexus@X.Y.Z analyze`. Use GitNexus query for architectural discovery, context before changing shared symbols, impact before changing public APIs or widely used symbols, and detect_changes before completing substantial changes. Never commit files under `.gitnexus/`.
+Before investigating or modifying code:
+
+1. Run `npx -y gitnexus@latest status` at the beginning of a task.
+2. If the index is missing or stale, run `npx -y gitnexus@latest analyze`.
+3. Use `gitnexus_query` for architectural discovery.
+4. Use `gitnexus_context` before changing a shared symbol.
+5. Use `gitnexus_impact` before changing public APIs, interfaces, or widely used symbols.
+6. Run `gitnexus_detect_changes` before completing a substantial change.
+7. Never commit files under `.gitnexus/`.
