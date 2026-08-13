@@ -1,0 +1,9 @@
+{
+  "analyze": {
+    "defaultBranch": "main",
+    "skipAgentsMd": true,
+    "skipSkills": true,
+    "embeddings": false,
+    "workerTimeout": 60
+  }
+}

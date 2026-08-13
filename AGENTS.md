@@ -29,3 +29,10 @@
 ## Notes
 - Cron endpoint requires `CRON_SECRET` authorization (see `README.md`).
 - No test suite is defined in `package.json`.
+
+
+## GitNexus
+
+GitNexus is the required code-intelligence system for this repository.
+
+Before investigating or modifying code, check the GitNexus repository context or run `npx -y gitnexus@X.Y.Z status`. If the index is missing or stale, run `npx -y gitnexus@X.Y.Z analyze`. Use GitNexus query for architectural discovery, context before changing shared symbols, impact before changing public APIs or widely used symbols, and detect_changes before completing substantial changes. Never commit files under `.gitnexus/`.
