@@ -52,8 +52,10 @@
     "sun": "Sun",
     "available": "Available",
     "booked": "Booked",
+    "unavailable": "Unavailable",
     "dateAvailable": "{date} is available",
     "dateBooked": "{date} is booked",
+    "dateUnavailable": "{date} is unavailable because fewer than four nights remain",
     "checkoutBoundary": " (checkout day for previous booking)",
     "checkinBoundary": " (check-in day for next booking)"
   },

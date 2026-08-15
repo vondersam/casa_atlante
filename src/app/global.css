@@ -505,7 +505,7 @@ main {
 
 .calendar-legend {
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  grid-template-columns: repeat(6, auto);
   align-items: center;
   gap: 8px;
   margin-top: 14px;
@@ -528,6 +528,11 @@ main {
 .legend-dot.booked {
   background: #f7eae3;
   border-color: var(--accent);
+}
+
+.legend-dot.unavailable {
+  background: #dedbd4;
+  border-color: #77766f;
 }
 
 .calendar-status {
@@ -1461,9 +1466,8 @@ textarea:focus-visible,
 }
 
 .story-card h3 {
-  padding-top: 18px;
-  border-top: 1px solid var(--border-strong);
-  margin-bottom: 14px;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .gallery-grid {
@@ -1633,6 +1637,16 @@ textarea:focus-visible,
 .calendar-cell.day.boundary-start.boundary-end.selected .day-number,
 .calendar-cell.day.boundary-start.boundary-end.selected .day-source {
   color: var(--text);
+}
+
+.calendar-cell.day.unavailable,
+.calendar-cell.day.unavailable.boundary-start,
+.calendar-cell.day.unavailable.boundary-end,
+.calendar-cell.day.unavailable.boundary-start.boundary-end {
+  cursor: not-allowed;
+  border-color: #77766f;
+  background: #dedbd4;
+  opacity: 0.72;
 }
 
 .calendar-cell.day.selectable:focus-visible {
