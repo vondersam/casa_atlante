@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { formatCompactDate } from "@/lib/date-format";
 import { createSimpleDocx } from "@/lib/docx";
 import { getServerT } from "@/lib/server-translations";
 
@@ -329,7 +330,14 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  const subject = t("subjectOwner", { start, end, firstName, lastName });
+  const displayStart = formatCompactDate(start);
+  const displayEnd = formatCompactDate(end);
+  const subject = t("subjectOwner", {
+    start: displayStart,
+    end: displayEnd,
+    firstName,
+    lastName,
+  });
   const nights = stayNights;
   const extraGuests = Math.max(0, Math.min(guests - 2, 2));
   const nightly = 90 + extraGuests * 20;
@@ -369,8 +377,8 @@ export async function POST(req: NextRequest) {
     t("lineName", { firstName, lastName }),
     t("lineEmail", { fromEmail }),
     t("lineGuests", { guests }),
-    t("lineCheckin", { start }),
-    t("lineCheckout", { end }),
+    t("lineCheckin", { start: displayStart }),
+    t("lineCheckout", { end: displayEnd }),
     "",
     t("priceBreakdown"),
     t("lineNights", { nights }),
@@ -413,7 +421,10 @@ export async function POST(req: NextRequest) {
     await transporter.sendMail({
       from: toEmail,
       to: fromEmail,
-      subject: t("subjectGuest", { start, end }),
+      subject: t("subjectGuest", {
+        start: displayStart,
+        end: displayEnd,
+      }),
       text: [
         t("guestIntro"),
         "",
