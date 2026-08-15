@@ -194,7 +194,7 @@ main {
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  padding: 0 var(--gutter);
+  padding: 0;
 }
 
 .header-inner {
@@ -1134,7 +1134,7 @@ textarea:focus-visible,
 .section-header {
   gap: 0;
   max-width: 1080px;
-  margin-bottom: clamp(54px, 7vw, 104px);
+  /* margin-bottom: clamp(54px, 7vw, 104px); */
 }
 
 .section-header .lead {
@@ -1217,16 +1217,16 @@ textarea:focus-visible,
   position: sticky;
   top: 0;
   z-index: 12;
-  padding: 0 var(--gutter);
+  padding: 0;
   border-bottom: 1px solid var(--border-strong);
   background: rgba(242, 240, 234, 0.93);
   backdrop-filter: blur(16px);
 }
 
 .header-inner {
-  max-width: none;
+  max-width: var(--max-width);
   height: 94px;
-  padding: 0;
+  padding: 0 var(--gutter);
 }
 
 .brand {
