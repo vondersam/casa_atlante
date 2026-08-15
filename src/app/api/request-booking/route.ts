@@ -124,6 +124,9 @@ function createInvoiceDocx(data: {
   firstName: string;
   lastName: string;
   email: string;
+  nif: string;
+  iban: string;
+  swift: string;
   guests: number;
   start: string;
   end: string;
@@ -142,7 +145,7 @@ function createInvoiceDocx(data: {
   return createSimpleDocx([
     { text: data.locale === "es" ? "Factura" : "Invoice", bold: true },
     { text: "Samuel Rodriguez Medina", alignment: "right", bold: true },
-    { text: "NIF: 42417352Q", alignment: "right" },
+    { text: `NIF: ${data.nif}`, alignment: "right" },
     { text: "Carretera General Jedey 42", alignment: "right" },
     { text: "38759 El Paso", alignment: "right" },
     { text: data.locale === "es" ? `Factura emitida: ${issued}` : `Invoice issued: ${issued}`, alignment: "right" },
@@ -154,8 +157,8 @@ function createInvoiceDocx(data: {
     { text: `IGIC (7%): ${formatCurrency(data.tax)}`, alignment: "right" },
     { text: data.locale === "es" ? `Importe a pagar: ${formatCurrency(data.total)}` : `Amount due: ${formatCurrency(data.total)}`, alignment: "right", bold: true },
     { text: data.locale === "es" ? `Confirmación con pago por transferencia bancaria antes del ${due}:` : `Confirmation with payment via bank transfer before ${due}:` },
-    { text: "IBAN: ES35 2100 7102 1107 0051 1115", bold: true },
-    { text: "SWIFT: CAIXESBBXXX", bold: true },
+    { text: `IBAN: ${data.iban}`, bold: true },
+    { text: `SWIFT: ${data.swift}`, bold: true },
   ]);
 }
 
@@ -242,8 +245,11 @@ export async function POST(req: NextRequest) {
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
   const toEmail = process.env.BOOKING_REQUEST_TO || "booking@casa-atlante.com";
+  const nif = process.env.NIF?.trim();
+  const iban = process.env.IBAN?.trim();
+  const swift = process.env.SWIFT?.trim();
 
-  if (!smtpHost || !smtpUser || !smtpPass || !fromEmail) {
+  if (!smtpHost || !smtpUser || !smtpPass || !nif || !iban || !swift) {
     return NextResponse.json(
       {
         error:
@@ -287,6 +293,9 @@ export async function POST(req: NextRequest) {
     firstName,
     lastName,
     email: fromEmail,
+    nif,
+    iban,
+    swift,
     guests,
     start,
     end,

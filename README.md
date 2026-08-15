@@ -30,6 +30,12 @@ Website for the holiday home rental Casa Atlante, located on the island of La Pa
 
 Validation errors and user-facing email copy are generated in the selected locale.
 
+The generated invoice requires the following server-side environment variables:
+
+- `NIF`
+- `IBAN`
+- `SWIFT`
+
 ## Cronjob
 
 Trigger the cron endpoint manually with the cron secret:
