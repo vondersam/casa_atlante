@@ -444,9 +444,52 @@ main {
   opacity: 0.45;
 }
 
+.calendar-cell.day.unselectable {
+  cursor: not-allowed;
+}
+
 .calendar-cell.day.selected {
   background: #e7f1ff;
   border-color: var(--accent);
+}
+
+.calendar-cell.day.boundary-start,
+.calendar-cell.day.boundary-end {
+  --boundary-top-left: #f9f7f4;
+  --boundary-bottom-right: #f7eae3;
+
+  background: linear-gradient(
+    to bottom right,
+    var(--boundary-top-left) 0,
+    var(--boundary-top-left) calc(50% - 1px),
+    var(--accent) calc(50% - 1px),
+    var(--accent) calc(50% + 1px),
+    var(--boundary-bottom-right) calc(50% + 1px),
+    var(--boundary-bottom-right) 100%
+  );
+  border-color: var(--accent);
+}
+
+.calendar-cell.day.boundary-end {
+  --boundary-top-left: #f7eae3;
+  --boundary-bottom-right: #f9f7f4;
+}
+
+.calendar-cell.day.boundary-start.boundary-end {
+  background: #f7eae3;
+}
+
+.calendar-cell.day.boundary-start.selected {
+  --boundary-top-left: #e7f1ff;
+}
+
+.calendar-cell.day.boundary-end.selected {
+  --boundary-bottom-right: #e7f1ff;
+}
+
+.calendar-cell.day.selectable:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .calendar-cell.day.muted {
