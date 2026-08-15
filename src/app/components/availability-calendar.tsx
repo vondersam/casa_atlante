@@ -21,6 +21,12 @@ type CalendarCell = {
   isBeforeMin: boolean;
 };
 
+type BookingState = {
+  isBooked: boolean;
+  isStart: boolean;
+  isEnd: boolean;
+};
+
 export type SelectedRange = {
   start: string | null;
   end: string | null;
@@ -45,6 +51,35 @@ function formatMonth(date: Date, locale: string) {
 
 function toISODate(date: Date) {
   return date.toISOString().slice(0, 10);
+}
+
+function getBookingState(isoDate: string, bookings: Booking[]): BookingState {
+  const isStart = bookings.some((booking) => isoDate === booking.start);
+  const isEnd = bookings.some((booking) => isoDate === booking.end);
+  const isBooked = bookings.some(
+    (booking) => isoDate > booking.start && isoDate < booking.end
+  );
+
+  return {
+    // Back-to-back existing stays leave neither half of the day available.
+    isBooked: isBooked || (isStart && isEnd),
+    isStart,
+    isEnd,
+  };
+}
+
+function canStartStay(isoDate: string, bookings: Booking[]) {
+  return !bookings.some(
+    (booking) => isoDate >= booking.start && isoDate < booking.end
+  );
+}
+
+function isStayAvailable(start: string, end: string, bookings: Booking[]) {
+  if (end <= start) return false;
+
+  return !bookings.some(
+    (booking) => start < booking.end && end > booking.start
+  );
 }
 
 export default function AvailabilityCalendar({
@@ -96,17 +131,6 @@ export default function AvailabilityCalendar({
 
     const cellList: CalendarCell[] = [];
 
-    const bookingState = (date: Date) => {
-      const iso = toISODate(date);
-      // Treat the start day as available (checkout of prior guest); block nights between start and end.
-      const booked = bookings.some(
-        (booking) => iso > booking.start && iso < booking.end
-      );
-      const isStart = bookings.some((booking) => iso === booking.start);
-      const isEnd = bookings.some((booking) => iso === booking.end);
-      return { booked, isStart, isEnd };
-    };
-
     for (let i = 0; i < totalCells; i++) {
       const dayNumber = i - startOffset + 1;
       const inCurrentMonth = dayNumber >= 1 && dayNumber <= daysInMonth;
@@ -124,13 +148,13 @@ export default function AvailabilityCalendar({
       }
 
       const date = new Date(Date.UTC(year, monthIndex, dayNumber));
-      const { booked, isStart, isEnd } = bookingState(date);
       const iso = toISODate(date);
+      const { isBooked, isStart, isEnd } = getBookingState(iso, bookings);
       cellList.push({
         label: dayNumber,
         isoDate: iso,
         inCurrentMonth: true,
-        isBooked: booked,
+        isBooked,
         isStart,
         isEnd,
         isBeforeMin: iso < minSelectable,
@@ -139,6 +163,16 @@ export default function AvailabilityCalendar({
 
     return cellList;
   }, [bookings, month, minSelectable]);
+
+  function canSelectDate(isoDate: string) {
+    const current = selection;
+
+    if (!current.start || current.end || isoDate <= current.start) {
+      return canStartStay(isoDate, bookings);
+    }
+
+    return isStayAvailable(current.start, isoDate, bookings);
+  }
 
   function updateSelection(isoDate: string) {
     if (!selectable) return;
@@ -230,6 +264,13 @@ export default function AvailabilityCalendar({
                   cell.isoDate >= selection.start &&
                   cell.isoDate <= selection.end) ||
                   (!selection.end && cell.isoDate === selection.start));
+              const isDateSelectable = Boolean(
+                selectable &&
+                  cell.isoDate &&
+                  cell.inCurrentMonth &&
+                  !cell.isBeforeMin &&
+                  canSelectDate(cell.isoDate)
+              );
 
               const classes = [
                 "calendar-cell",
@@ -238,11 +279,17 @@ export default function AvailabilityCalendar({
                 cell.isBooked ? "booked" : "available",
                 cell.isStart ? "boundary-start" : "",
                 cell.isEnd ? "boundary-end" : "",
-                selectable ? "selectable" : "",
+                isDateSelectable ? "selectable" : "",
                 isSelected ? "selected" : "",
                 isSelectionStart ? "selected-start" : "",
                 isSelectionEnd ? "selected-end" : "",
                 cell.isBeforeMin ? "disabled" : "",
+                selectable &&
+                cell.inCurrentMonth &&
+                !cell.isBeforeMin &&
+                !isDateSelectable
+                  ? "unselectable"
+                  : "",
               ]
                 .filter(Boolean)
                 .join(" ");
@@ -256,14 +303,7 @@ export default function AvailabilityCalendar({
                 : undefined;
 
               const handleClick = () => {
-                if (!selectable) return;
-                if (
-                  !cell.isoDate ||
-                  cell.isBooked ||
-                  !cell.inCurrentMonth ||
-                  cell.isBeforeMin
-                )
-                  return;
+                if (!cell.isoDate || !isDateSelectable) return;
                 updateSelection(cell.isoDate);
               };
 
@@ -272,15 +312,13 @@ export default function AvailabilityCalendar({
                   key={cell.isoDate ?? `pad-${index}`}
                   className={classes}
                   aria-label={label}
-                  role={selectable ? "button" : undefined}
-                  tabIndex={
-                    selectable &&
-                    cell.inCurrentMonth &&
-                    !cell.isBooked &&
-                    !cell.isBeforeMin
-                      ? 0
+                  aria-disabled={
+                    selectable && cell.inCurrentMonth
+                      ? !isDateSelectable
                       : undefined
                   }
+                  role={selectable && cell.inCurrentMonth ? "button" : undefined}
+                  tabIndex={isDateSelectable ? 0 : undefined}
                   onClick={handleClick}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
