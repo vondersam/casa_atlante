@@ -9,7 +9,6 @@ export default function About() {
       <div className="content-width split-grid">
         <div>
           <div className="section-header">
-            <p className="eyebrow">Sobre mí</p>
             <h1>Mi historia</h1>
           </div>
           <p>

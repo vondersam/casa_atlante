@@ -3,7 +3,6 @@ export default function TheHome() {
     <section className="section">
       <div className="content-width">
         <div className="section-header">
-          <p className="eyebrow">The house</p>
           <h1>Casa Atlante details</h1>
           <p className="lead">
             Casa Atlante is a beautiful ocean-view holiday rental on La Palma's

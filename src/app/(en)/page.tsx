@@ -46,12 +46,9 @@ export default function Home() {
     <>
       <section className="hero">
         <div className="content-width">
-          <p className="eyebrow">La Palma, Canary Islands</p>
           <h1>Casa Atlante</h1>
           <p>
-            An ocean-view, solar-powered home in the quiet Jedey neighbourhood,
-            surrounded by the Atlantic horizon and the Cumbre Vieja Natural
-            Park.
+            Solar-powered hideaway in the west of La Palma surrounded by the Atlantic horizon and the Cumbre Vieja Natural Park.
           </p>
           <div className="hero-actions">
             <a className="btn" href="#booking">
@@ -67,7 +64,6 @@ export default function Home() {
       <section className="section" id="house">
         <div className="content-width split-grid">
           <div>
-            <p className="eyebrow">Our story</p>
             <h2>Slow living above the Atlantic</h2>
             <p>
               Casa Atlante is a fully renovated 46 m² home designed for calm,
@@ -101,7 +97,6 @@ export default function Home() {
       <section className="section muted" id="stay">
         <div className="content-width">
           <div className="section-header">
-            <p className="eyebrow">Your stay</p>
             <h2>Designed for unrushed, comfortable days</h2>
             <p className="lead">
               From sunrise walks to slow sunsets, Casa Atlante is set up for
@@ -161,7 +156,6 @@ export default function Home() {
       <section className="section" id="surroundings">
         <div className="content-width">
           <div className="section-header">
-            <p className="eyebrow">The land</p>
             <h2>Between the Atlantic and Cumbre Vieja</h2>
             <p className="lead">
               Casa Atlante sits in the peaceful Jedey area, part of the Red
@@ -230,7 +224,6 @@ export default function Home() {
       <section className="section muted" id="gallery">
         <div className="content-width">
           <div className="section-header">
-            <p className="eyebrow">Gallery</p>
             <h2>Casa Atlante in pictures</h2>
             <p className="lead">
               The shutters, mosquito nets, and curtains were added after some of
@@ -281,7 +274,6 @@ export default function Home() {
       <section className="section" id="press">
         <div className="content-width">
           <div className="section-header">
-            <p className="eyebrow">What guests notice</p>
             <h2>Full of light, calm, and connected to nature</h2>
             <p className="lead">
               Casa Atlante blends ocean horizon views with thoughtful finishes.
@@ -319,7 +311,6 @@ export default function Home() {
       <section className="section muted" id="to-do">
         <div className="content-width">
           <div className="section-header">
-            <p className="eyebrow">To do in the area</p>
             <h2>Explore La Palma&apos;s west coast</h2>
             <p className="lead">
               Ocean swims, volcanic trails, and small-town eateries are all
@@ -386,7 +377,6 @@ export default function Home() {
         <div className="content-width split-grid">
           <div>
             <div className="section-header">
-              <p className="eyebrow">Booking</p>
               <h2>Ready to stay at Casa Atlante?</h2>
               <p className="lead">
                 Send us your dates and the number of guests. We&apos;ll confirm
@@ -410,7 +400,6 @@ export default function Home() {
 
           <div>
             <div className="section-header" style={{ marginBottom: "18px" }}>
-              <p className="eyebrow">Location</p>
               <h2>Jedey, La Palma</h2>
               <p className="lead">
                 A quiet spot with easy drives to El Paso and Los Llanos (30-45

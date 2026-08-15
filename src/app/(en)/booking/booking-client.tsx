@@ -80,7 +80,6 @@ function AvailabilityCalendarFallback() {
           ←
         </button>
         <div>
-          <p className="eyebrow">{t("availability")}</p>
           <div className="month-label">{t("syncing")}</div>
           <p className="calendar-meta">{t("syncing")}</p>
         </div>
@@ -270,7 +269,6 @@ export default function BookingClient({
     <section className="section">
       <div className="content-width">
         <div className="section-header">
-          <p className="eyebrow">{t("eyebrow")}</p>
           <h1>{t("title")}</h1>
           <p className="lead">
             {t("lead")}
