@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { formatCompactDate } from "@/lib/date-format";
 import { createSimpleDocx } from "@/lib/docx";
 import { getServerT } from "@/lib/server-translations";
 
@@ -37,6 +38,25 @@ function formatDate(value: string, locale: "en" | "es") {
     year: "numeric",
     timeZone: "UTC",
   }).format(new Date(`${value}T00:00:00Z`));
+}
+
+function currentCanaryDate() {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "Atlantic/Canary",
+  }).formatToParts(new Date());
+  const values = new Map(parts.map(({ type, value }) => [type, value]));
+  const year = values.get("year");
+  const month = values.get("month");
+  const day = values.get("day");
+
+  if (!year || !month || !day) {
+    throw new Error("Unable to determine the invoice creation date.");
+  }
+
+  return `${year}-${month}-${day}`;
 }
 
 function paymentDueDate(start: string) {
@@ -87,12 +107,29 @@ function createAgreementDocx(data: {
       { text: "Detalles de pago", bold: true },
       { text: "Factura PayPal enviada por correo electrónico." },
       { text: "Reembolsos y cancelaciones", bold: true },
-      { text: "• 100% de reembolso si los huéspedes cancelan al menos 30 días antes de la entrada." },
-      { text: "• 50% de reembolso si los huéspedes cancelan al menos 14 días antes de la entrada." },
-      { text: "• Sin reembolso si los huéspedes cancelan menos de 14 días antes de la entrada." },
-      { text: "Tarifas: Las tarifas se calculan según el número de huéspedes y la duración de la estancia. La ocupación no puede superar el número de huéspedes acordado." },
-      { text: "Limpieza y daños: La limpieza final, el cambio de ropa de cama, sábanas y toallas está incluido. Los huéspedes son responsables de los daños ocurridos durante su estancia." },
-      { text: "Disposiciones generales: El alojamiento dispone de jabón, papel higiénico, especias, sal y pimienta, aceite y vinagre, café y té. La casa se entrega con ropa de cama, toallas y equipamiento de cocina." },
+      { text: "• 100% de reembolso si los huéspedes cancelan al menos 14 días antes de la entrada." },
+      { text: "• 50% de reembolso, menos la comisión de servicio, si los huéspedes cancelan al menos 7 días antes de la entrada." },
+      { text: "• Sin reembolso si los huéspedes cancelan menos de 7 días antes de la entrada." },
+      { text: "• Para tener derecho al reembolso correspondiente, los huéspedes pueden cancelar hasta las 23:59 (hora local del alojamiento)." },
+      { text: "Tarifas: Las tarifas se calculan según el número de huéspedes y la duración de la estancia. El importe abonado cubre únicamente el alquiler del alojamiento para el número de huéspedes acordado y pagado. La ocupación no puede superar el número de huéspedes acordado. Los huéspedes no pueden invitar a familiares o amigos que no estén incluidos en la reserva." },
+      { text: "Limpieza y daños: La limpieza final y el cambio de ropa de cama, sábanas y toallas son gratuitos. Para estancias de más de 3 semanas, también se realizarán a mitad de la estancia. Se recomienda dejar la casa barrida, con los platos lavados y guardados, y retirar toda la basura y los materiales reciclables al hacer el check-out. Los huéspedes son responsables de los daños que se produzcan en el alojamiento durante su estancia. Si algo resulta dañado, el huésped se compromete a informar inmediatamente al propietario por escrito. Lo mismo se aplica a cualquier avería en la casa o en la propiedad." },
+      { text: "Disposiciones generales: El alojamiento dispone de jabón, papel higiénico, especias, sal y pimienta, aceite y vinagre, café y té. Estas provisiones no se reponen durante la estancia; los huéspedes deberán reponerlas si se agotan. La casa también dispone de ropa de cama 100% algodón, toallas, paños de cocina, tabla y plancha, secador de pelo y otros artículos. La cocina está totalmente equipada con cafetera, cafetera moka, hervidor de agua, tostadora y los electrodomésticos principales, incluida una lavadora. La casa también dispone de televisión por satélite, Internet wifi y otros elementos para la comodidad de los huéspedes." },
+      { text: "Condiciones generales e información", bold: true },
+      { text: "• La hora de entrada es a las 15:00 y la hora de salida es a las 10:00." },
+      { text: "• No está permitido fumar en el interior." },
+      { text: "• Hay aparcamiento gratuito disponible en la propiedad." },
+      { text: "• Al salir de la casa, los huéspedes dejarán las llaves en la caja de llaves y cerrarán todas las puertas." },
+      { text: "• No se permiten mascotas ni alojarlas dentro de la vivienda vacacional." },
+      { text: "• El huésped reconoce haber tenido la oportunidad de revisar este contrato y aceptarlo al realizar la reserva." },
+      { text: "• El huésped reconoce que el inventario de la casa puede variar con el tiempo cuando el propietario retire artículos para repararlos o realice cambios decorativos." },
+      { text: "• Este contrato se rige por la legislación de las Islas Canarias y sustituye cualquier acuerdo verbal previo." },
+      { text: "• Los propietarios no son responsables del robo ni de los daños a los bienes personales de los huéspedes." },
+      { text: "• Si algún aparato o electrodoméstico deja de funcionar, el precio no se verá afectado. El propietario intentará solucionar el problema en un plazo razonable. El huésped se compromete a notificar inmediatamente al propietario o a su representante cualquier avería, daño o emergencia." },
+      { text: "• El propietario o una persona de reparación o mantenimiento podrá entrar en la propiedad para realizar servicios, reparaciones u otras tareas relacionadas con el alquiler, siempre avisando al huésped con una antelación razonable." },
+      { text: "• El huésped se compromete a actuar con prudencia respecto al ruido. La propiedad está sujeta a la normativa de ruido de El Paso y a la intervención de las autoridades. El propietario podrá resolver este contrato y desalojar al huésped si se producen quejas reiteradas de los vecinos o interviene la policía. El horario de silencio es de 23:00 a 08:00. Nunca se permite música alta en las terrazas ni en el jardín." },
+      { text: "• No se debe tirar al inodoro papel ni otros residuos, como compresas o pañales. Deben utilizarse las papeleras situadas junto al inodoro." },
+      { text: "• El agua del grifo no es potable, aunque puede utilizarse para cocinar. Para beber, recomendamos agua embotellada." },
+      { text: "• Si hace viento, y siempre al salir de la casa o por la noche, deben guardarse dentro todos los cojines y sombrillas de las terrazas." },
     ]);
   }
 
@@ -110,12 +147,29 @@ function createAgreementDocx(data: {
     { text: "Payment details", bold: true },
     { text: "PayPal invoice sent through email." },
     { text: "Refund and Cancellations:", bold: true },
-    { text: "• 100% refund if guests cancel at least 30 days before check-in." },
-    { text: "• 50% refund if guests cancel at least 14 days before check-in." },
-    { text: "• No refund if guests cancel less than 14 days before check-in." },
-    { text: "Rates: The rates are calculated based on the number of guests and the length of stay. The occupancy may not exceed the guest count agreed upon." },
-    { text: "Cleaning & Damages: The final cleaning, change of bedding, linens and towels is free of charge and will be done during the mid stay for stays longer than 3 weeks. Guests are responsible for damage that occurs during their stay." },
-    { text: "General provisions: The accommodation is equipped with soap, toilet paper, spices, salt and pepper, oil and vinegar, coffee, tea, linens, towels and kitchen equipment." },
+    { text: "• 100% refund if guests cancel at least 14 days before check-in." },
+    { text: "• 50% refund, less the service fee, if guests cancel at least 7 days before check-in." },
+    { text: "• No refund if guests cancel less than 7 days before check-in." },
+    { text: "• Guests can cancel until 11:59 p.m. (local time of the holiday home) in order to be entitled to the applicable refund amount." },
+    { text: "Rates: The rates are calculated based on the number of guests and the length of stay. The amount paid by the guest covers the rent of the accommodation only for the number of guests agreed upon and paid for. The occupancy may not exceed the guest count agreed upon. Guests may not invite family members or friends to the premises that are not accounted for via the booking." },
+    { text: "Cleaning & Damages: The final cleaning and change of bedding, linens and towels are free of charge. For stays longer than 3 weeks, they will also be done during the mid-stay. It is recommended to leave the home broom clean, with dishes washed and put away and all trash and recyclables removed when checking out. Guests are held responsible for damage that occurs to the holiday home during their stay. If something gets damaged during the stay, the guest agrees to inform the owner immediately in writing. The same applies to any malfunction in the house or on the premises." },
+    { text: "General provisions: The accommodation is equipped with a supply of soap, toilet paper, spices, salt and pepper, oil and vinegar, coffee and tea. These supplies are not replenished during occupancy; guests are responsible for replenishing them should they run out. The home is also furnished with 100% cotton linens, towels, kitchen towels, an ironing board and iron, a hair dryer and other items. The kitchen is fully equipped with a coffee maker, mocha machine, hot water maker, toaster and all major appliances, including a washing machine. The home also has satellite TV, Wi-Fi Internet and other items for guests' comfort." },
+    { text: "General Terms and Disclosures:", bold: true },
+    { text: "• Check-in time is 3 p.m. Check-out time is 10 a.m." },
+    { text: "• Smoking is not allowed indoors." },
+    { text: "• Parking is available at the property free of charge." },
+    { text: "• When leaving the house, guests will leave the keys in the key locker and close all doors." },
+    { text: "• No pets are allowed or may be harboured inside the vacation rental accommodation." },
+    { text: "• The guest acknowledges that they have had the opportunity to review this agreement and agree to it when making the reservation." },
+    { text: "• The guest acknowledges that the inventory of the house may vary and change over time as the owner removes items for repair or makes other decorative changes." },
+    { text: "• This agreement is based on Canary Islands law and supersedes all prior oral discussions." },
+    { text: "• The owners are not responsible for theft or any damage to guests' personal property." },
+    { text: "• Should any of the home's gadgets or appliances become inoperable, the rate will not be affected. The owner will attempt to correct the problem in a timely manner. The guest agrees to immediately notify the owner or their agent of any malfunction, damage or emergency." },
+    { text: "• The owner or a repair/service person may enter the property for service, repairs or another reason pertinent to the rental business only with reasonable notice to the guest." },
+    { text: "• The guest agrees to use good judgment regarding noise. The property is subject to the El Paso noise ordinance and law-enforcement involvement. The owner may terminate this agreement and evict the guest should repeated complaints from neighbours or police involvement occur. Quiet hours are from 11 p.m. to 8 a.m. Loud outdoor music on the terraces and in the garden is never allowed." },
+    { text: "• No paper or other waste, such as sanitary towels or nappies, should be deposited in the toilet. Please use the bins located next to the toilet." },
+    { text: "• The tap water is not drinkable, although it can be used for cooking. For drinking, bottled water is recommended." },
+    { text: "• Please put all pillows and parasols from the terraces inside if it gets windy, and always when leaving the house or at night." },
   ]);
 }
 
@@ -124,6 +178,9 @@ function createInvoiceDocx(data: {
   firstName: string;
   lastName: string;
   email: string;
+  nif: string;
+  iban: string;
+  swift: string;
   guests: number;
   start: string;
   end: string;
@@ -133,29 +190,36 @@ function createInvoiceDocx(data: {
   total: number;
 }) {
   const guestName = `${data.firstName} ${data.lastName}`;
-  const issued = formatDate(new Date().toISOString().slice(0, 10), data.locale);
-  const due = formatDate(paymentDueDate(data.start), data.locale);
-  const stayLine = data.locale === "es"
-    ? `Estancia ${data.guests} persona${data.guests === 1 ? "" : "s"}, ${data.nights} noche${data.nights === 1 ? "" : "s"}, ${formatDate(data.start, data.locale)} a ${formatDate(data.end, data.locale)}`
-    : `Stay for ${data.guests} people, ${data.nights} night${data.nights === 1 ? "" : "s"}, ${formatDate(data.start, data.locale)} to ${formatDate(data.end, data.locale)}`;
+  const today = currentCanaryDate();
+  const [invoiceYear, invoiceMonth, invoiceDay] = today.split("-");
+  const invoiceNumber = `${invoiceDay}${invoiceMonth}${invoiceYear}`;
+  const dueDate = paymentDueDate(data.start);
+  const issued = formatDate(today, data.locale);
+  const dueEs = formatDate(dueDate, "es");
+  const dueEn = formatDate(dueDate, "en");
+  const stayLineEs = `Estancia ${data.guests} persona${data.guests === 1 ? "" : "s"}, ${data.nights} noche${data.nights === 1 ? "" : "s"}, ${formatDate(data.start, "es")} a ${formatDate(data.end, "es")}`;
+  const stayLineEn = `Stay for ${data.guests} ${data.guests === 1 ? "person" : "people"}, ${data.nights} night${data.nights === 1 ? "" : "s"}, ${formatDate(data.start, "en")} to ${formatDate(data.end, "en")}`;
 
   return createSimpleDocx([
-    { text: data.locale === "es" ? "Factura" : "Invoice", bold: true },
+    { text: "Factura / Invoice", bold: true },
     { text: "Samuel Rodriguez Medina", alignment: "right", bold: true },
-    { text: "NIF: 42417352Q", alignment: "right" },
+    { text: `NIF: ${data.nif}`, alignment: "right" },
     { text: "Carretera General Jedey 42", alignment: "right" },
     { text: "38759 El Paso", alignment: "right" },
-    { text: data.locale === "es" ? `Factura emitida: ${issued}` : `Invoice issued: ${issued}`, alignment: "right" },
+    { text: `Fecha / Date: ${issued}`, alignment: "right" },
+    { text: `Factura / Invoice: ${invoiceNumber}`, alignment: "right" },
     { text: guestName },
     { text: data.email },
-    { text: data.locale === "es" ? "Concepto" : "Description", spacingAfter: 80 },
-    { text: stayLine },
-    { text: data.locale === "es" ? `Importe sin IGIC: ${formatCurrency(data.subtotal)}` : `Amount excluding IGIC: ${formatCurrency(data.subtotal)}`, alignment: "right" },
+    { text: "Concepto / Concept", spacingAfter: 80 },
+    { text: stayLineEs },
+    { text: stayLineEn },
+    { text: `Importe sin IGIC / Amount excluding IGIC: ${formatCurrency(data.subtotal)}`, alignment: "right" },
     { text: `IGIC (7%): ${formatCurrency(data.tax)}`, alignment: "right" },
-    { text: data.locale === "es" ? `Importe a pagar: ${formatCurrency(data.total)}` : `Amount due: ${formatCurrency(data.total)}`, alignment: "right", bold: true },
-    { text: data.locale === "es" ? `Confirmación con pago por transferencia bancaria antes del ${due}:` : `Confirmation with payment via bank transfer before ${due}:` },
-    { text: "IBAN: ES35 2100 7102 1107 0051 1115", bold: true },
-    { text: "SWIFT: CAIXESBBXXX", bold: true },
+    { text: `Importe a pagar / Amount due: ${formatCurrency(data.total)}`, alignment: "right", bold: true },
+    { text: `Confirmación con pago por transferencia bancaria antes del ${dueEs}:` },
+    { text: `Confirmation with payment via bank transfer before ${dueEn}:` },
+    { text: `IBAN: ${data.iban}`, bold: true },
+    { text: `SWIFT: ${data.swift}`, bold: true },
   ]);
 }
 
@@ -242,8 +306,11 @@ export async function POST(req: NextRequest) {
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
   const toEmail = process.env.BOOKING_REQUEST_TO || "booking@casa-atlante.com";
+  const nif = process.env.NIF?.trim();
+  const iban = process.env.IBAN?.trim();
+  const swift = process.env.SWIFT?.trim();
 
-  if (!smtpHost || !smtpUser || !smtpPass || !fromEmail) {
+  if (!smtpHost || !smtpUser || !smtpPass || !nif || !iban || !swift) {
     return NextResponse.json(
       {
         error:
@@ -263,7 +330,14 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  const subject = t("subjectOwner", { start, end, firstName, lastName });
+  const displayStart = formatCompactDate(start);
+  const displayEnd = formatCompactDate(end);
+  const subject = t("subjectOwner", {
+    start: displayStart,
+    end: displayEnd,
+    firstName,
+    lastName,
+  });
   const nights = stayNights;
   const extraGuests = Math.max(0, Math.min(guests - 2, 2));
   const nightly = 90 + extraGuests * 20;
@@ -287,6 +361,9 @@ export async function POST(req: NextRequest) {
     firstName,
     lastName,
     email: fromEmail,
+    nif,
+    iban,
+    swift,
     guests,
     start,
     end,
@@ -300,8 +377,8 @@ export async function POST(req: NextRequest) {
     t("lineName", { firstName, lastName }),
     t("lineEmail", { fromEmail }),
     t("lineGuests", { guests }),
-    t("lineCheckin", { start }),
-    t("lineCheckout", { end }),
+    t("lineCheckin", { start: displayStart }),
+    t("lineCheckout", { end: displayEnd }),
     "",
     t("priceBreakdown"),
     t("lineNights", { nights }),
@@ -344,7 +421,10 @@ export async function POST(req: NextRequest) {
     await transporter.sendMail({
       from: toEmail,
       to: fromEmail,
-      subject: t("subjectGuest", { start, end }),
+      subject: t("subjectGuest", {
+        start: displayStart,
+        end: displayEnd,
+      }),
       text: [
         t("guestIntro"),
         "",

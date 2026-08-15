@@ -7,6 +7,7 @@ import AvailabilityCalendar, {
 } from "@/app/components/availability-calendar";
 import { useLocale, useT } from "@/i18n/context";
 import { localizePath } from "@/i18n/path";
+import { formatCompactDate } from "@/lib/date-format";
 
 type AvailabilitySnapshot = {
   bookings: Booking[];
@@ -165,12 +166,14 @@ export default function BookingClient({
     if (!selection.start && !selection.end)
       return t("summarySelect");
     if (selection.start && !selection.end)
-      return t("summaryCheckIn", { start: selection.start });
+      return t("summaryCheckIn", {
+        start: formatCompactDate(selection.start),
+      });
     if (selection.start && selection.end) {
       const nights = nightsBetween(selection.start, selection.end);
       return t("summarySelected", {
-        start: selection.start,
-        end: selection.end,
+        start: formatCompactDate(selection.start),
+        end: formatCompactDate(selection.end),
         nights,
       });
     }

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useT } from "@/i18n/context";
+import { formatCompactDate } from "@/lib/date-format";
 
 export type Booking = {
   start: string; // YYYY-MM-DD (inclusive)
@@ -248,7 +249,7 @@ export default function AvailabilityCalendar({
 
               const label = cell.isoDate
                 ? `${t(cell.isBooked ? "dateBooked" : "dateAvailable", {
-                    date: cell.isoDate,
+                    date: formatCompactDate(cell.isoDate),
                   })}${cell.isStart ? t("checkoutBoundary") : ""}${
                     cell.isEnd ? t("checkinBoundary") : ""
                   }`
