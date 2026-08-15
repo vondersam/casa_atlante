@@ -4,7 +4,6 @@ export default function Location() {
       <div className="content-width split-grid">
         <div>
           <div className="section-header">
-            <p className="eyebrow">Location</p>
             <h1>Jedey, La Palma</h1>
             <p className="lead">
               Casa Atlante sits in the Red Natura 2000 of Tamanca on La Palma’s

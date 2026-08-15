@@ -4,7 +4,6 @@ export default function Location() {
       <div className="content-width split-grid">
         <div>
           <div className="section-header">
-            <p className="eyebrow">Ubicación</p>
             <h1>Jedey, La Palma</h1>
             <p className="lead">
               Casa Atlante se encuentra en la Red Natura 2000 de Tamanca, en el

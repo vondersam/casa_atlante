@@ -51,7 +51,6 @@ export default function Gallery() {
     <section className="section">
       <div className="content-width">
         <div className="section-header">
-          <p className="eyebrow">Gallery</p>
           <h1>Casa Atlante in detail</h1>
           <p className="lead">
             The shutters, mosquito nets, and curtains were installed after some

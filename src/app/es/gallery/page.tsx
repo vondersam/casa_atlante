@@ -51,7 +51,6 @@ export default function Gallery() {
     <section className="section">
       <div className="content-width">
         <div className="section-header">
-          <p className="eyebrow">Galería</p>
           <h1>Casa Atlante en detalle</h1>
           <p className="lead">
             Las contraventanas, mosquiteras y cortinas se instalaron después de

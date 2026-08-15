@@ -3,7 +3,6 @@ export default function TheHome() {
     <section className="section">
       <div className="content-width">
         <div className="section-header">
-          <p className="eyebrow">La casa</p>
           <h1>Detalles de Casa Atlante</h1>
           <p className="lead">
             Casa Atlante es una bonita vivienda vacacional con vistas al océano

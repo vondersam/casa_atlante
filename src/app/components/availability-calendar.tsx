@@ -218,7 +218,6 @@ export default function AvailabilityCalendar({
         </button>
 
         <div>
-          <p className="eyebrow">{t("availability")}</p>
           <div className="month-label">{formatMonth(month, tCommon("localeTag"))}</div>
           {updatedAt ? (
             <p className="calendar-meta">

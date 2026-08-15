@@ -1,16 +1,16 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Source_Sans_3 } from 'next/font/google';
+import { Manrope, Noto_Serif } from 'next/font/google';
 import './global.css';
 
-const headingFont = Playfair_Display({
+const headingFont = Manrope({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-heading'
 });
 
-const bodyFont = Source_Sans_3({
+const bodyFont = Noto_Serif({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
+  weight: ['300', '400', '500', '600', '700'],
   variable: '--font-body'
 });
 
