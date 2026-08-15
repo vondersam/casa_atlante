@@ -46,18 +46,9 @@ export default function Home() {
     <>
       <section className="hero">
         <div className="content-width">
-          <h1>Casa Atlante</h1>
           <p>
             Solar-powered hideaway in the west of La Palma surrounded by the Atlantic horizon and the Cumbre Vieja Natural Park.
           </p>
-          <div className="hero-actions">
-            <a className="btn" href="#booking">
-              Book your stay
-            </a>
-            <a className="btn secondary" href="#gallery">
-              See the house
-            </a>
-          </div>
         </div>
       </section>
 
@@ -261,12 +252,6 @@ export default function Home() {
                 </div>
               );
             })}
-          </div>
-
-          <div className="hero-actions" style={{ marginTop: "22px" }}>
-            <Link className="btn secondary" href={localizePath("/gallery", locale)}>
-              View full gallery
-            </Link>
           </div>
         </div>
       </section>

@@ -52,8 +52,10 @@
     "sun": "Dom",
     "available": "Disponible",
     "booked": "Reservado",
+    "unavailable": "No disponible",
     "dateAvailable": "{date} está disponible",
     "dateBooked": "{date} está reservado",
+    "dateUnavailable": "{date} no está disponible porque quedan menos de cuatro noches",
     "checkoutBoundary": " (día de salida de la reserva anterior)",
     "checkinBoundary": " (día de entrada de la siguiente reserva)"
   },

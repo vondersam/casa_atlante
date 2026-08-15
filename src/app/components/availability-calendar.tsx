@@ -16,6 +16,7 @@ type CalendarCell = {
   isoDate?: string;
   inCurrentMonth: boolean;
   isBooked: boolean;
+  isUnavailable: boolean;
   isStart: boolean;
   isEnd: boolean;
   isBeforeMin: boolean;
@@ -26,6 +27,14 @@ type BookingState = {
   isStart: boolean;
   isEnd: boolean;
 };
+
+type DateRange = {
+  start: string;
+  end: string;
+};
+
+const MINIMUM_STAY_NIGHTS = 4;
+const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 
 export type SelectedRange = {
   start: string | null;
@@ -51,6 +60,56 @@ function formatMonth(date: Date, locale: string) {
 
 function toISODate(date: Date) {
   return date.toISOString().slice(0, 10);
+}
+
+function nightsBetween(start: string, end: string) {
+  const startTime = Date.parse(`${start}T00:00:00Z`);
+  const endTime = Date.parse(`${end}T00:00:00Z`);
+
+  if (!Number.isFinite(startTime) || !Number.isFinite(endTime)) return 0;
+  return Math.max(0, Math.round((endTime - startTime) / MILLISECONDS_PER_DAY));
+}
+
+function getShortAvailabilityWindows(
+  bookings: Booking[],
+  minSelectable: string
+): DateRange[] {
+  const mergedBookings = bookings
+    .filter((booking) => booking.end > booking.start)
+    .map(({ start, end }) => ({ start, end }))
+    .sort((a, b) => a.start.localeCompare(b.start))
+    .reduce<DateRange[]>((merged, booking) => {
+      const previous = merged.at(-1);
+
+      if (!previous || booking.start > previous.end) {
+        merged.push({ ...booking });
+      } else if (booking.end > previous.end) {
+        previous.end = booking.end;
+      }
+
+      return merged;
+    }, []);
+
+  const shortWindows: DateRange[] = [];
+  let availableFrom = minSelectable;
+
+  for (const booking of mergedBookings) {
+    if (booking.end <= availableFrom) continue;
+
+    if (booking.start > availableFrom) {
+      const availableNights = nightsBetween(availableFrom, booking.start);
+
+      if (availableNights < MINIMUM_STAY_NIGHTS) {
+        shortWindows.push({ start: availableFrom, end: booking.start });
+      }
+    }
+
+    if (booking.end > availableFrom) {
+      availableFrom = booking.end;
+    }
+  }
+
+  return shortWindows;
 }
 
 function getBookingState(isoDate: string, bookings: Booking[]): BookingState {
@@ -112,6 +171,10 @@ export default function AvailabilityCalendar({
     end: null,
   });
   const selection = selectedRange ?? internalSelection;
+  const shortAvailabilityWindows = useMemo(
+    () => getShortAvailabilityWindows(bookings, minSelectable),
+    [bookings, minSelectable]
+  );
 
   function shiftMonth(delta: number) {
     const next = new Date(month);
@@ -140,6 +203,7 @@ export default function AvailabilityCalendar({
           label: null,
           inCurrentMonth: false,
           isBooked: false,
+          isUnavailable: false,
           isStart: false,
           isEnd: false,
           isBeforeMin: false,
@@ -150,11 +214,15 @@ export default function AvailabilityCalendar({
       const date = new Date(Date.UTC(year, monthIndex, dayNumber));
       const iso = toISODate(date);
       const { isBooked, isStart, isEnd } = getBookingState(iso, bookings);
+      const isUnavailable = shortAvailabilityWindows.some(
+        (window) => iso >= window.start && iso <= window.end
+      );
       cellList.push({
         label: dayNumber,
         isoDate: iso,
         inCurrentMonth: true,
         isBooked,
+        isUnavailable,
         isStart,
         isEnd,
         isBeforeMin: iso < minSelectable,
@@ -162,7 +230,7 @@ export default function AvailabilityCalendar({
     }
 
     return cellList;
-  }, [bookings, month, minSelectable]);
+  }, [bookings, month, minSelectable, shortAvailabilityWindows]);
 
   function canSelectDate(isoDate: string) {
     const current = selection;
@@ -268,6 +336,7 @@ export default function AvailabilityCalendar({
                   cell.isoDate &&
                   cell.inCurrentMonth &&
                   !cell.isBeforeMin &&
+                  !cell.isUnavailable &&
                   canSelectDate(cell.isoDate)
               );
 
@@ -276,6 +345,7 @@ export default function AvailabilityCalendar({
                 "day",
                 cell.inCurrentMonth ? "" : "muted",
                 cell.isBooked ? "booked" : "available",
+                cell.isUnavailable ? "unavailable" : "",
                 cell.isStart ? "boundary-start" : "",
                 cell.isEnd ? "boundary-end" : "",
                 isDateSelectable ? "selectable" : "",
@@ -293,8 +363,13 @@ export default function AvailabilityCalendar({
                 .filter(Boolean)
                 .join(" ");
 
+              const dateStatusKey = cell.isUnavailable
+                ? "dateUnavailable"
+                : cell.isBooked
+                  ? "dateBooked"
+                  : "dateAvailable";
               const label = cell.isoDate
-                ? `${t(cell.isBooked ? "dateBooked" : "dateAvailable", {
+                ? `${t(dateStatusKey, {
                     date: formatCompactDate(cell.isoDate),
                   })}${cell.isStart ? t("checkoutBoundary") : ""}${
                     cell.isEnd ? t("checkinBoundary") : ""
@@ -339,6 +414,8 @@ export default function AvailabilityCalendar({
             <span>{t("available")}</span>
             <span className="legend-dot booked" />
             <span>{t("booked")}</span>
+            <span className="legend-dot unavailable" />
+            <span>{t("unavailable")}</span>
           </div>
         </>
       )}

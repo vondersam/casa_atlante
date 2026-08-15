@@ -1,5 +1,6 @@
 import Header from './header';
 import Footer from './footer';
+import ScrollToTop from './scroll-to-top';
 import { I18nProvider } from '@/i18n/context';
 import { getMessages } from '@/i18n/request';
 import type { AppLocale } from '@/i18n/routing';
@@ -16,6 +17,7 @@ export default async function SiteShell({
   return (
     <I18nProvider locale={locale} messages={messages}>
       <div className="page-shell">
+        <ScrollToTop />
         <Header />
         <main>{children}</main>
         <Footer />
