@@ -39,6 +39,25 @@ function formatDate(value: string, locale: "en" | "es") {
   }).format(new Date(`${value}T00:00:00Z`));
 }
 
+function currentCanaryDate() {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "Atlantic/Canary",
+  }).formatToParts(new Date());
+  const values = new Map(parts.map(({ type, value }) => [type, value]));
+  const year = values.get("year");
+  const month = values.get("month");
+  const day = values.get("day");
+
+  if (!year || !month || !day) {
+    throw new Error("Unable to determine the invoice creation date.");
+  }
+
+  return `${year}-${month}-${day}`;
+}
+
 function paymentDueDate(start: string) {
   const today = new Date();
   const currentDate = new Date(Date.UTC(
@@ -170,7 +189,9 @@ function createInvoiceDocx(data: {
   total: number;
 }) {
   const guestName = `${data.firstName} ${data.lastName}`;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = currentCanaryDate();
+  const [invoiceYear, invoiceMonth, invoiceDay] = today.split("-");
+  const invoiceNumber = `${invoiceDay}${invoiceMonth}${invoiceYear}`;
   const dueDate = paymentDueDate(data.start);
   const issued = formatDate(today, data.locale);
   const dueEs = formatDate(dueDate, "es");
@@ -185,6 +206,7 @@ function createInvoiceDocx(data: {
     { text: "Carretera General Jedey 42", alignment: "right" },
     { text: "38759 El Paso", alignment: "right" },
     { text: `Fecha / Date: ${issued}`, alignment: "right" },
+    { text: `Factura / Invoice: ${invoiceNumber}`, alignment: "right" },
     { text: guestName },
     { text: data.email },
     { text: "Concepto / Concept", spacingAfter: 80 },
