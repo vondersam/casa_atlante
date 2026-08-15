@@ -46,19 +46,10 @@ export default function Home() {
     <>
       <section className="hero">
         <div className="content-width">
-          <h1>Casa Atlante</h1>
           <p>
             Rincón en el oeste de La Palma, rodeado por el horizonte atlántico
              y el Parque Natural de Cumbre Vieja
           </p>
-          <div className="hero-actions">
-            <a className="btn" href="#booking">
-              Reserva tu estancia
-            </a>
-            <a className="btn secondary" href="#gallery">
-              Ver la casa
-            </a>
-          </div>
         </div>
       </section>
 
@@ -251,12 +242,6 @@ export default function Home() {
                 </div>
               );
             })}
-          </div>
-
-          <div className="hero-actions" style={{ marginTop: "22px" }}>
-            <Link className="btn secondary" href={localizePath("/gallery", locale)}>
-              Ver galería completa
-            </Link>
           </div>
         </div>
       </section>
