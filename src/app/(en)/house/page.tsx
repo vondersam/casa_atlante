@@ -100,7 +100,7 @@ export default function TheHome() {
         <div className="booking-card" style={{ marginTop: "28px" }}>
           <h3>Rates and check-in</h3>
           <ul>
-            <li>90 euros per night for two guests</li>
+            <li>89 euros per night for two guests</li>
             <li>
               20 euros per night for each additional guest (sleeps max. 4)
             </li>
