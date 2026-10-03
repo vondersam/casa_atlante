@@ -1,5 +1,11 @@
 Website for the holiday home rental Casa Atlante, located on the island of La Palma, Canary Islands. Deployed with Vercel [here](https://www.casa-atlante.com/).
 
+## Google Search Console verification
+
+`public/googlea0852f88a5ebb71f.html` is the Google ownership verification file for `https://www.casa-atlante.com/`. Keep its filename and contents unchanged, including after verification succeeds.
+
+After deploying to production, confirm that `https://www.casa-atlante.com/googlea0852f88a5ebb71f.html` displays the verification text without requiring login, then click **Verify** in Google Search Console.
+
 ## i18n routing
 
 - Default locale is English and uses unprefixed URLs (`/`, `/booking`).
