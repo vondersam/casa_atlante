@@ -27,7 +27,7 @@ const initialForm = {
   guests: 2,
 };
 
-const NIGHTLY_BASE = 90;
+const NIGHTLY_BASE = 89;
 const EXTRA_GUEST_FEE = 20;
 const INCLUDED_GUESTS = 2;
 const MAX_GUESTS = 4;

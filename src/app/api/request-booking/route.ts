@@ -340,7 +340,7 @@ export async function POST(req: NextRequest) {
   });
   const nights = stayNights;
   const extraGuests = Math.max(0, Math.min(guests - 2, 2));
-  const nightly = 90 + extraGuests * 20;
+  const nightly = 89 + extraGuests * 20;
   const subtotal = nights * nightly;
   const tax = subtotal * 0.07;
   const total = subtotal + tax;
