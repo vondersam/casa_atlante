@@ -14,7 +14,7 @@
     "@vis.gl/react-google-maps": "^1.8.3",
     "bootstrap": "^5.3.8",
     "next": "^16.4.5",
-    "nodemailer": "^8.0.7",
+    "nodemailer": "^10.4.0",
     "react": "^19.2.5",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.2.5",
