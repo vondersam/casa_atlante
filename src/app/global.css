@@ -2134,3 +2134,20 @@ textarea:focus-visible,
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Booking payment and owner controls */
+.booking-fields { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 1rem; }
+.booking-fields select, .owner-dashboard select, .owner-dashboard input { width: 100%; padding: .7rem; border: 1px solid #767d70; border-radius: 6px; background: #fff; color: #20251f; }
+.payment-options { border: 1px solid #8b9383; border-radius: 8px; padding: 1rem; }
+.payment-options label { display: flex; align-items: flex-start; gap: .75rem; margin: .75rem 0; }
+.payment-options input { margin-top: .35rem; flex: 0 0 auto; }
+.booking-fields :focus-visible, .owner-dashboard :focus-visible { outline: 3px solid #386735; outline-offset: 3px; }
+.owner-dashboard { max-width: 1100px; margin: 2rem auto; padding: 1rem; }
+.owner-booking { border: 1px solid #b1b8a7; border-radius: 10px; padding: 1.25rem; margin: 1rem 0; background: #fff; overflow-wrap: anywhere; }
+.owner-booking h2 { font-size: 1.3rem; }
+.owner-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+.owner-actions button, .owner-actions a { padding: .6rem .8rem; border: 1px solid #53734b; border-radius: 5px; background: #edf2e9; color: #20361b; text-decoration: none; }
+.owner-actions button:disabled { opacity: .5; cursor: wait; }
+.owner-conflict { border-left: 5px solid #a63526; padding-left: 1rem; }
+.owner-dashboard fieldset { border: 1px solid #a6b29c; border-radius: 6px; padding: 1rem; margin: 1rem 0; }
+.owner-dashboard label { display: grid; gap: .35rem; margin: .7rem 0; }

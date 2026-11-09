@@ -71,7 +71,20 @@ export default function Privacy() {
         which theCONTROLLER has signed the confidentiality and data processor
         contracts required by current privacy regulations.
       </p>
-      <h3>What are your rights?</h3>
+            <h3>Booking, payment and invoice information</h3>
+      <p>
+        We use your contact details, stay dates, guest count and billing details
+        to manage your booking, take payment, issue invoices and handle refunds.
+        We retain the accepted agreement version and acceptance time, booking
+        records, payment references and copies of invoices and agreements.
+        Stripe processes card payments on its hosted payment page; this website
+        does not receive or store full card numbers. Supabase provides booking
+        data storage, private document storage and owner authentication. Our
+        email provider delivers booking messages and attachments. Public calendar
+        feeds contain blocked dates and anonymous booking identifiers, not guest
+        names or contact details. Booking consent does not subscribe you to marketing.
+      </p>
+<h3>What are your rights?</h3>
       <p>The rights of the USER are:</p>
       <ul>
         <li>Right to withdraw consent at any time.</li>

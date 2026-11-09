@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  agentRules: false,
+  outputFileTracingIncludes: { "/api/**": ["./assets/fonts/**"] },
+};
 
 module.exports = nextConfig;

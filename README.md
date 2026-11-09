@@ -22,24 +22,25 @@ Website for the holiday home rental Casa Atlante, located on the island of La Pa
 4. Run `npm run i18n:check`.
 5. Run `npm run lint` and `npm run build`.
 
-## Booking API locale payload
+## Direct bookings
 
-`POST /api/request-booking` accepts:
+The site supports Stripe instant booking and owner-approved bank transfers. The owner dashboard is at `/admin`. Guest flows and agreements are available in English and Spanish.
 
-- `locale: "en" | "es"` (optional, defaults to `en`)
+Read [booking operations and setup](docs/booking-operations.md) before deploying. It covers the required database migration, Stripe webhooks, owner-only email-code authentication, private PDFs, five-minute Supabase Cron scheduling, iCal setup, environment variables, API contracts and recovery procedures. `STRIPE_ENABLED` defaults to disabled until setup is verified.
 
-Validation errors and user-facing email copy are generated in the selected locale.
+## Checks
 
-The generated invoice requires the following server-side environment variables:
-
-- `NIF`
-- `IBAN`
-- `SWIFT`
-
-## Cronjob
-
-Trigger the cron endpoint manually with the cron secret:
+Use Node.js 24, then run:
 
 ```bash
-curl -H "Authorization: Bearer $CRON_SECRET" https://www.casa-atlante.com/api/cron
+npm test
+npm run lint
+npm run i18n:check
+npm run build
 ```
+
+The booking tests use an isolated in-memory PostgreSQL engine; they do not contact production services.
+
+## Background worker
+
+The authenticated `/api/cron` endpoint reconciles pending payments/holds/refunds, imports calendars, and retries email delivery. Configure its five-minute schedule as described in the operations guide. The daily Vercel schedule is retained as a backup.

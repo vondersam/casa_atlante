@@ -1,96 +1,7 @@
-import { Booking, sanitizeBooking, setAvailability } from '@/lib/availability';
-
-type ICalSource = {
-  name: string;
-  url: string;
-};
-
-function normalizeICalDate(line: string): string | null {
-  const parts = line.split(':');
-  if (parts.length < 2) return null;
-  const rawValue = parts.slice(1).join(':').trim();
-
-  if (/^\d{8}$/.test(rawValue)) {
-    const year = rawValue.slice(0, 4);
-    const month = rawValue.slice(4, 6);
-    const day = rawValue.slice(6, 8);
-    return `${year}-${month}-${day}`;
-  }
-
-  const candidate = rawValue.endsWith('Z') ? rawValue : `${rawValue}Z`;
-  const parsed = new Date(candidate);
-  if (Number.isNaN(parsed.getTime())) return null;
-  return parsed.toISOString().slice(0, 10);
-}
-
-function parseICal(ical: string, source: string): Booking[] {
-  const lines = ical.split(/\r?\n/);
-  const bookings: Booking[] = [];
-
-  let start: string | null = null;
-  let end: string | null = null;
-  let summary: string | null = null;
-  let isCancelled = false;
-
-  for (const raw of lines) {
-    const line = raw.trim();
-    if (line === 'BEGIN:VEVENT') {
-      start = null;
-      end = null;
-      summary = null;
-      isCancelled = false;
-      continue;
-    }
-
-    if (line.startsWith('DTSTART')) {
-      start = normalizeICalDate(line);
-      continue;
-    }
-
-    if (line.startsWith('DTEND')) {
-      end = normalizeICalDate(line);
-      continue;
-    }
-
-    if (line.startsWith('SUMMARY')) {
-      const parts = line.split(':');
-      summary = parts.length > 1 ? parts.slice(1).join(':').trim() : null;
-      continue;
-    }
-
-    if (line.startsWith('STATUS:CANCELLED')) {
-      isCancelled = true;
-      continue;
-    }
-
-    if (line === 'END:VEVENT') {
-      if (!isCancelled && start && end) {
-        bookings.push({
-          start,
-          end,
-          source,
-          note: summary ?? undefined
-        });
-      }
-    }
-  }
-
-  return bookings;
-}
-
-async function fetchICal(url: string) {
-  const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Failed to fetch iCal: ${res.status}`);
-  return res.text();
-}
-
-function getSources() {
-  return [
-    { name: 'airbnb', url: process.env.AIRBNB_ICAL_URL },
-    { name: 'booking.com', url: process.env.BOOKING_ICAL_URL }
-  ].filter((entry): entry is ICalSource => Boolean(entry.url));
-}
-
+import { rpc } from "./booking/repository";
+import { BookingError } from "./booking/policy";
+import { parseICal } from "./booking/ical";
+import { getSupabaseAdmin } from "./supabase";
 export type SyncResult = {
   ok: true;
   sources: string[];
@@ -98,38 +9,72 @@ export type SyncResult = {
   stored: number;
   updatedAt: string;
 };
-
-export async function syncAvailabilityFromSources(): Promise<SyncResult> {
-  const sources = getSources();
-  if (!sources.length) {
-    throw new Error('No iCal URLs configured. Add AIRBNB_ICAL_URL and/or BOOKING_ICAL_URL.');
+async function fetchCalendar(url: string): Promise<string> {
+  const parsed = new URL(url);
+  if (parsed.protocol !== "https:")
+    throw new Error("Calendar URL must use HTTPS");
+  const res = await fetch(url, {
+    cache: "no-store",
+    signal: AbortSignal.timeout(10000),
+    redirect: "error",
+  });
+  if (
+    !res.ok ||
+    !res.body ||
+    Number(res.headers.get("content-length") || 0) > 2_000_000
+  )
+    throw new Error("Calendar fetch failed");
+  const reader = res.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  try {
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      size += value.length;
+      if (size > 2_000_000) throw new Error("Calendar too large");
+      chunks.push(value);
+    }
+  } finally {
+    await reader.cancel();
   }
-
-  const calendars = await Promise.all(
-    sources.map(async (source) => {
-      const ical = await fetchICal(source.url);
-      return parseICal(ical, source.name);
-    })
-  );
-
-  const combined = calendars.flat();
-
-  const sanitized = combined
-    .map((booking) => sanitizeBooking(booking))
-    .filter((booking): booking is Booking => Boolean(booking));
-
-  if (!sanitized.length) {
-    throw new Error('No valid events found in iCal feeds');
-  }
-
-  const updatedAt = await setAvailability(sanitized);
-
-  return {
-    ok: true,
-    sources: sources.map((s) => s.name),
-    imported: combined.length,
-    stored: sanitized.length,
-    updatedAt
-  };
+  return Buffer.concat(chunks).toString("utf8");
 }
-
+export async function syncAvailabilityFromSources(): Promise<SyncResult> {
+  const startedAt = new Date().toISOString();
+  const sources = [
+    { name: "airbnb", url: process.env.AIRBNB_ICAL_URL },
+    { name: "booking.com", url: process.env.BOOKING_ICAL_URL },
+  ];
+  try {
+    const calendars = await Promise.all(
+      sources.map(async (s) => {
+        if (!s.url) throw new Error("Both calendars are required");
+        return parseICal(await fetchCalendar(s.url), s.name);
+      }),
+    );
+    const events = calendars.flat();
+    await rpc<boolean>("ca_sync_calendars", {
+      p_events: events,
+      p_started_at: startedAt,
+    });
+    return {
+      ok: true,
+      sources: sources.map((s) => s.name),
+      imported: events.length,
+      stored: events.length,
+      updatedAt: startedAt,
+    };
+  } catch {
+    throw new BookingError("calendar_unavailable", 503);
+  }
+}
+export async function refreshCalendarForDisplay(): Promise<void> {
+  const { data, error } = await getSupabaseAdmin()
+    .from("calendar_sync_state")
+    .select("completed_at")
+    .eq("id", 1)
+    .maybeSingle();
+  if (error || !data || Date.parse(data.completed_at) < Date.now() - 30000)
+    await syncAvailabilityFromSources();
+}

@@ -371,7 +371,7 @@ export default function Home() {
 
             <div className="booking-card">
               <p>
-                Rates: 90 € per night for two guests. 20 € per night for each
+                Rates: 89 € per night for two guests. 20 € per night for each
                 additional guest (up to 4).
               </p>
               <p>Check-in from 15:00; check-out by 10:00.</p>

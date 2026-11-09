@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useT } from "@/i18n/context";
 import { formatCompactDate } from "@/lib/date-format";
+import { addDays, canaryDate } from "@/lib/booking/policy";
 
 export type Booking = {
   start: string; // YYYY-MM-DD (inclusive)
@@ -151,17 +152,7 @@ export default function AvailabilityCalendar({
 }: AvailabilityCalendarProps) {
   const t = useT("calendar");
   const tCommon = useT("common");
-  const minSelectable = useMemo(() => {
-    const today = new Date();
-    const min = new Date(
-      Date.UTC(
-        today.getUTCFullYear(),
-        today.getUTCMonth(),
-        today.getUTCDate() + 2
-      )
-    );
-    return toISODate(min);
-  }, []);
+  const minSelectable = useMemo(() => addDays(canaryDate(), 2), []);
   const [month, setMonth] = useState(() => {
     const now = new Date();
     return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));

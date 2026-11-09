@@ -71,7 +71,22 @@ export default function Privacy() {
           contratos de confidencialidad y de encargado del tratamiento exigidos
           por la normativa vigente en materia de privacidad.
         </p>
-        <h3>¿Cuáles son tus derechos?</h3>
+                <h3>Datos de reservas, pagos y facturación</h3>
+        <p>
+          Utilizamos tus datos de contacto, fechas, número de huéspedes y datos
+          de facturación para gestionar la reserva, recibir el pago, emitir
+          facturas y tramitar reembolsos. Conservamos la versión del contrato
+          aceptado y la fecha de aceptación, los registros de reserva, las
+          referencias de pago y copias de facturas y contratos. Stripe procesa
+          los pagos con tarjeta en su página de pago; esta web no recibe ni
+          almacena números completos de tarjetas. Supabase proporciona el
+          almacenamiento de reservas y documentos privados y la autenticación
+          del propietario. Nuestro proveedor de correo entrega los mensajes y
+          documentos de la reserva. Los calendarios públicos incluyen fechas
+          bloqueadas e identificadores anónimos, sin nombres ni datos de contacto.
+          El consentimiento de reserva no te suscribe a comunicaciones comerciales.
+        </p>
+<h3>¿Cuáles son tus derechos?</h3>
         <p>Los derechos del USUARIO son:</p>
         <ul>
           <li>Derecho a retirar el consentimiento en cualquier momento.</li>

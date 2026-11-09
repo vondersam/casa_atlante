@@ -102,7 +102,7 @@ export default function TheHome() {
         <div className="booking-card" style={{ marginTop: "28px" }}>
           <h3>Precios y llegada</h3>
           <ul>
-            <li>90 euros por noche por dos huéspedes</li>
+            <li>89 euros por noche por dos huéspedes</li>
             <li>20 euros por noche por cada huésped adicional (máximo 4)</li>
             <li>
               Los precios no incluyen IGIC (IVA), que es del 7% y se añade al
